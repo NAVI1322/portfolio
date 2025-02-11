@@ -51,6 +51,11 @@
   /* Grid and pattern variables */
   --cyber-grid-color: rgba(181, 55, 242, 0.1);
   --synthwave-sun-color: rgba(255, 113, 206, 0.2);
+
+  /* Particle Colors */
+  --synthwave-blue: #00F5FF;
+  --synthwave-purple: #B537F2;
+  --synthwave-pink: #FF71CE;
 }
 
 a {
@@ -542,4 +547,132 @@ button:focus-visible {
 
 .dark .theme-toggle {
   @apply bg-gray-800 hover:bg-gray-700 text-gray-300;
+}
+
+/* Typing Animation */
+.typing-text {
+  overflow: hidden;
+  border-right: 2px solid #00F5FF;
+  white-space: nowrap;
+  animation: 
+    typing 3s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00F5FF }
+}
+
+/* Typing Animations */
+.typing-text-quote {
+  overflow: hidden;
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  width: 0;
+  animation: 
+    typing 4s steps(40, end) forwards,
+    blink 0.75s step-end infinite,
+    fadeOut 0.5s ease-out 11.5s forwards;
+}
+
+.typing-text-quote-2 {
+  overflow: hidden;
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  width: 0;
+  opacity: 0;
+  animation: 
+    fadeIn 0.5s ease-in 12s forwards,
+    typing 4s steps(40, end) 12s forwards,
+    blink 0.75s step-end infinite,
+    fadeOut 0.5s ease-out 23.5s forwards;
+}
+
+.typing-text-quote-3 {
+  overflow: hidden;
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  width: 0;
+  opacity: 0;
+  animation: 
+    fadeIn 0.5s ease-in 24s forwards,
+    typing 4s steps(40, end) 24s forwards,
+    blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+  from, to { border-color: transparent }
+  50% { border-color: currentColor }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1 }
+  to { opacity: 0 }
+}
+
+.typewriter-1 {
+  overflow: hidden;
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  width: 0;
+  animation: 
+    typing 4s steps(40, end) forwards,
+    blink 0.75s step-end infinite,
+    fadeOut 0.5s ease-out 11.5s forwards;
+}
+
+.typewriter-2 {
+  overflow: hidden;
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  width: 0;
+  opacity: 0;
+  animation: 
+    fadeIn 0.5s ease-in 12s forwards,
+    typing 4s steps(40, end) 12s forwards,
+    blink 0.75s step-end infinite,
+    fadeOut 0.5s ease-out 23.5s forwards;
+}
+
+.typewriter-3 {
+  overflow: hidden;
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  width: 0;
+  opacity: 0;
+  animation: 
+    fadeIn 0.5s ease-in 24s forwards,
+    typing 4s steps(40, end) 24s forwards,
+    blink 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  from, to { border-color: transparent }
+  50% { border-color: currentColor }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1 }
+  to { opacity: 0 }
 }

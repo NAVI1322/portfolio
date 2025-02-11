@@ -6,26 +6,20 @@ const socialLinks = [
   {
     name: 'GitHub',
     icon: Github,
-    href: 'https://github.com/yourusername',
+    href: 'https://www.github.com/navi1322',
     color: 'from-neon.cyan to-neon.purple'
-  },
-  {
-    name: 'Twitter',
-    icon: Twitter,
-    href: 'https://twitter.com/yourusername',
-    color: 'from-neon.purple to-neon.pink'
   },
   {
     name: 'LinkedIn',
     icon: Linkedin,
-    href: 'https://linkedin.com/in/yourusername',
-    color: 'from-neon.pink to-neon.cyan'
+    href: 'https://www.linkedin.com/in/navneet7/',
+    color: 'from-neon.purple to-neon.pink'
   },
   {
     name: 'Email',
     icon: Mail,
     href: 'mailto:your@email.com',
-    color: 'from-neon.cyan to-neon.purple'
+    color: 'from-neon.pink to-neon.cyan'
   }
 ]
 

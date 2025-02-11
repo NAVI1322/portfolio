@@ -221,6 +221,11 @@ module.exports = {
     			'matrix-rain': 'repeating-linear-gradient(0deg, rgba(0, 255, 65, 0.15) 0%, rgba(0, 255, 65, 0.15) 1px, transparent 1px, transparent 2px)',
     			'synthwave-sun': 'radial-gradient(circle at 50% 0%, var(--synthwave-sun-color) 0%, transparent 50%)',
     		},
+    		backgroundColor: {
+    			'synthwave-blue': 'var(--synthwave-blue)',
+    			'synthwave-purple': 'var(--synthwave-purple)',
+    			'synthwave-pink': 'var(--synthwave-pink)',
+    		},
     	}
     },
     plugins: [

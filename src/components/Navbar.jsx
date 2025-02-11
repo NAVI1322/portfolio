@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import { Download, Menu, X, ChevronRight } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Menu, X, ChevronRight } from 'lucide-react'
+import { ResumeButton } from './ui/resume-button'
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -12,33 +13,40 @@ const navItems = [
   { name: 'Contact', href: '#contact' },
 ]
 
+// Debounce helper
+const debounce = (fn, delay) => {
+  let timeoutId
+  return (...args) => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn(...args), delay)
+  }
+}
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Update scroll state with smoother transition
-      setIsScrolled(window.scrollY > 20)
+  const handleScroll = useCallback(debounce(() => {
+    setIsScrolled(window.scrollY > 20)
 
-      // Update active section based on scroll position with offset
-      const sections = navItems.map(item => item.href.substring(1))
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section)
-        if (!element) return false
-        const rect = element.getBoundingClientRect()
-        return rect.top <= 100 && rect.bottom >= 100
-      })
-      if (currentSection) {
-        setActiveSection(currentSection)
-      }
+    const sections = navItems.map(item => item.href.substring(1))
+    const currentSection = sections.find(section => {
+      const element = document.getElementById(section)
+      if (!element) return false
+      const rect = element.getBoundingClientRect()
+      return rect.top <= 100 && rect.bottom >= 100
+    })
+    if (currentSection) {
+      setActiveSection(currentSection)
     }
+  }, 100), [])
 
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll)
-    handleScroll() // Initial check
+    handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [handleScroll])
 
   const handleNavClick = (e, href) => {
     e.preventDefault()
@@ -46,13 +54,10 @@ export default function Navbar() {
     const element = document.getElementById(targetId)
     if (!element) return
 
-    // Close mobile menu if open
     setIsMobileMenuOpen(false)
-
-    // Calculate offset based on viewport width (mobile vs desktop)
     const offset = window.innerWidth >= 768 ? 80 : 60
-
     const targetPosition = element.getBoundingClientRect().top + window.scrollY - offset
+    
     window.scrollTo({
       top: targetPosition,
       behavior: 'smooth'
@@ -68,7 +73,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-full">
-          {/* Logo with Animation */}
+          {/* Logo */}
           <motion.a
             href="#home"
             onClick={(e) => handleNavClick(e, '#home')}
@@ -76,42 +81,9 @@ export default function Navbar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="font-cyber font-bold text-3xl text-neon.cyan"
-            >
-              Navi
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-              className="font-cyber font-bold text-3xl text-neon.purple relative"
-            >
-              X
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink opacity-0 blur-xl"
-                animate={{
-                  opacity: [0, 0.5, 0],
-                  scale: [0.8, 1.2, 0.8],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.9 }}
-              className="font-cyber font-bold text-3xl text-neon.pink"
-            >
-              dev
-            </motion.div>
+            <span className="font-cyber font-bold text-3xl text-neon.cyan">Navi</span>
+            <span className="font-cyber font-bold text-3xl text-neon.purple">X</span>
+            <span className="font-cyber font-bold text-3xl text-neon.pink">dev</span>
           </motion.a>
 
           {/* Desktop Navigation */}
@@ -138,60 +110,23 @@ export default function Navbar() {
                 </motion.a>
               )
             })}
-
-            {/* Resume Button */}
-            <motion.a
-              href="/path-to-your-resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative ml-4 inline-flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden font-future bg-gradient-to-r from-neon.cyan/10 to-neon.purple/10 text-neon.cyan hover:from-neon.cyan/20 hover:to-neon.purple/20 border border-neon.cyan/20 hover:border-neon.cyan/40 transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Resume
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-neon.cyan/20 to-neon.purple/20 opacity-0"
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.a>
+            <ResumeButton variant="nav" />
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <motion.button
-              className="p-2 rounded-full bg-neon.purple/10 hover:bg-neon.purple/20"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              whileTap={{ scale: 0.95 }}
-            >
-              <AnimatePresence mode="wait">
-                {isMobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X className="w-6 h-6 text-neon.cyan" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu className="w-6 h-6 text-neon.purple" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
+          <motion.button
+            className="md:hidden p-2 rounded-full bg-neon.purple/10 hover:bg-neon.purple/20"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            whileTap={{ scale: 0.95 }}
+          >
+            <AnimatePresence mode="wait">
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6 text-neon.cyan" />
+              ) : (
+                <Menu className="w-6 h-6 text-neon.purple" />
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
       </div>
 
@@ -202,22 +137,10 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.2 }}
             className="md:hidden bg-background/95 backdrop-blur-md border-t border-primary/10"
           >
-            <motion.div 
-              className="max-w-7xl mx-auto py-4 px-4 space-y-1"
-              initial="closed"
-              animate="open"
-              variants={{
-                open: {
-                  transition: { staggerChildren: 0.05, delayChildren: 0.1 }
-                },
-                closed: {
-                  transition: { staggerChildren: 0.05, staggerDirection: -1 }
-                }
-              }}
-            >
+            <div className="max-w-7xl mx-auto py-4 px-4 space-y-1">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1)
                 return (
@@ -230,10 +153,6 @@ export default function Navbar() {
                         ? 'text-neon.cyan bg-neon.cyan/10' 
                         : 'text-foreground hover:text-neon.cyan hover:bg-neon.cyan/5'
                     } transition-colors duration-200`}
-                    variants={{
-                      open: { x: 0, opacity: 1 },
-                      closed: { x: -20, opacity: 0 }
-                    }}
                     whileHover={{ x: 5 }}
                   >
                     <span className="flex items-center justify-between">
@@ -243,26 +162,8 @@ export default function Navbar() {
                   </motion.a>
                 )
               })}
-              <motion.a
-                href="/path-to-your-resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block py-2 px-4 rounded-lg font-future text-sm text-neon.purple bg-neon.purple/10 hover:bg-neon.purple/20 transition-colors duration-200"
-                variants={{
-                  open: { x: 0, opacity: 1 },
-                  closed: { x: -20, opacity: 0 }
-                }}
-                whileHover={{ x: 5 }}
-              >
-                <span className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Download className="w-4 h-4" />
-                    Download Resume
-                  </span>
-                  <ChevronRight className="w-4 h-4" />
-                </span>
-              </motion.a>
-            </motion.div>
+              <ResumeButton className="w-full justify-between" />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

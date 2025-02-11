@@ -9,10 +9,10 @@ const achievements = [
     description: 'Recognized for outstanding contributions to web development',
     year: '2023',
     stats: '100+ Projects Delivered',
-    color: 'from-[#00F5FF] to-[#B537F2]',
-    hoverColor: 'group-hover:from-[#00F5FF] group-hover:to-[#B537F2]',
-    shadowColor: 'shadow-[#00F5FF]/20',
-    glowColor: '[#00F5FF]'
+    color: 'from-neon.cyan/20 to-neon.purple/20',
+    hoverColor: 'group-hover:from-neon.cyan/30 group-hover:to-neon.purple/30',
+    shadowColor: 'shadow-neon.cyan/20',
+    glowColor: 'neon.cyan'
   },
   {
     icon: Star,
@@ -20,10 +20,10 @@ const achievements = [
     description: 'Consistently delivered high-quality projects ahead of schedule',
     year: '2022',
     stats: '95% Success Rate',
-    color: 'from-[#B537F2] to-[#FF71CE]',
-    hoverColor: 'group-hover:from-[#B537F2] group-hover:to-[#FF71CE]',
-    shadowColor: 'shadow-[#B537F2]/20',
-    glowColor: '[#B537F2]'
+    color: 'from-neon.purple/20 to-neon.pink/20',
+    hoverColor: 'group-hover:from-neon.purple/30 group-hover:to-neon.pink/30',
+    shadowColor: 'shadow-neon.purple/20',
+    glowColor: 'neon.purple'
   },
   {
     icon: Award,
@@ -31,10 +31,10 @@ const achievements = [
     description: 'Led the development of groundbreaking features and technologies',
     year: '2022',
     stats: '15+ Innovations',
-    color: 'from-[#FF71CE] to-[#00F5FF]',
-    hoverColor: 'group-hover:from-[#FF71CE] group-hover:to-[#00F5FF]',
-    shadowColor: 'shadow-[#FF71CE]/20',
-    glowColor: '[#FF71CE]'
+    color: 'from-neon.cyan/20 to-neon.purple/20',
+    hoverColor: 'group-hover:from-neon.cyan/30 group-hover:to-neon.purple/30',
+    shadowColor: 'shadow-neon.cyan/20',
+    glowColor: 'neon.cyan'
   },
   {
     icon: Target,
@@ -42,10 +42,10 @@ const achievements = [
     description: 'Achieved 100% client satisfaction rate across all projects',
     year: '2021',
     stats: '50+ Happy Clients',
-    color: 'from-[#00F5FF] to-[#B537F2]',
-    hoverColor: 'group-hover:from-[#00F5FF] group-hover:to-[#B537F2]',
-    shadowColor: 'shadow-[#00F5FF]/20',
-    glowColor: '[#00F5FF]'
+    color: 'from-neon.purple/20 to-neon.pink/20',
+    hoverColor: 'group-hover:from-neon.purple/30 group-hover:to-neon.pink/30',
+    shadowColor: 'shadow-neon.purple/20',
+    glowColor: 'neon.purple'
   }
 ]
 
@@ -123,10 +123,10 @@ export default function Achievements() {
               {/* Achievement Card */}
               <div className="relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm 
                 border border-white/5 transition-all duration-500 
-                hover:border-[#00F5FF]/30 hover:shadow-lg hover:shadow-[#00F5FF]/10"
+                hover:border-neon.cyan/30 hover:shadow-lg group"
               >
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 
                   bg-gradient-to-br ${achievement.color}`} />
                 
                 {/* Content */}
@@ -137,12 +137,16 @@ export default function Achievements() {
                       whileHover={{ rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.7, ease: "easeOut" }}
                       className={`relative flex-none p-3 rounded-xl 
-                        bg-gradient-to-br ${achievement.color} ${achievement.hoverColor} 
-                        bg-opacity-10 border border-white/10
-                        transition-all duration-500 ease-out shadow-sm ${achievement.shadowColor}`}
+                        bg-gradient-to-br ${achievement.color} 
+                        bg-opacity-10 border border-neon.cyan/20
+                        transition-all duration-500 ease-out shadow-lg
+                        group-hover:shadow-2xl group-hover:border-neon.cyan/50
+                        [box-shadow:0_0_20px_rgba(0,245,255,0.2)]
+                        group-hover:[box-shadow:0_0_30px_rgba(0,245,255,0.3)]`}
                     >
                       {React.createElement(achievement.icon, {
-                        className: `w-6 h-6 text-${achievement.glowColor} relative z-10`
+                        className: `w-6 h-6 text-neon.cyan relative z-10
+                          group-hover:text-white transition-colors duration-300`
                       })}
                       {/* Glow Effect */}
                       <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 
@@ -152,27 +156,34 @@ export default function Achievements() {
                     <div className="flex-1">
                       {/* Title and Year */}
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className={`text-xl font-future bg-clip-text text-transparent bg-gradient-to-r ${achievement.color} ${achievement.hoverColor}`}>
+                        <h3 className={`text-xl font-future bg-clip-text text-transparent 
+                          bg-gradient-to-r ${achievement.color} group-hover:text-white
+                          transition-colors duration-300 [text-shadow:0_0_20px_rgba(0,245,255,0.3)]`}>
                           {achievement.title}
                         </h3>
                         <span className={`text-sm px-3 py-1 rounded-full 
-                          bg-gradient-to-r ${achievement.color} ${achievement.hoverColor} 
+                          bg-gradient-to-r ${achievement.color} 
                           text-white font-future shadow-lg group-hover:shadow-xl 
-                          transition-all duration-500`}
+                          transition-all duration-500 group-hover:scale-105
+                          [box-shadow:0_0_15px_rgba(0,245,255,0.2)]
+                          group-hover:[box-shadow:0_0_25px_rgba(0,245,255,0.3)]`}
                         >
                           {achievement.year}
                         </span>
                       </div>
 
                       {/* Description */}
-                      <p className="font-cyber text-sm text-neon.cyan/60 group-hover:text-neon.cyan/80 transition-colors duration-500 mb-4">
+                      <p className="font-cyber text-sm text-neon.cyan/60 group-hover:text-neon.cyan/90 
+                        transition-colors duration-500 mb-4">
                         {achievement.description}
                       </p>
 
                       {/* Stats */}
                       <div className="flex items-center gap-2 text-sm font-future">
-                        <Sparkles className={`w-4 h-4 text-${achievement.glowColor}`} />
-                        <span className={`bg-clip-text text-transparent bg-gradient-to-r ${achievement.color}`}>
+                        <Sparkles className="w-4 h-4 text-neon.cyan group-hover:text-white 
+                          transition-colors duration-300" />
+                        <span className={`bg-clip-text text-transparent bg-gradient-to-r ${achievement.color}
+                          group-hover:text-white transition-colors duration-300`}>
                           {achievement.stats}
                         </span>
                       </div>
@@ -181,8 +192,9 @@ export default function Achievements() {
 
                   {/* Bottom Gradient Line */}
                   <div className={`absolute bottom-0 left-0 right-0 h-[2px] 
-                    bg-gradient-to-r ${achievement.color} ${achievement.hoverColor} 
-                    opacity-0 group-hover:opacity-100 transition-all duration-500`} 
+                    bg-gradient-to-r ${achievement.color}
+                    opacity-0 group-hover:opacity-100 transition-all duration-500
+                    [box-shadow:0_0_10px_rgba(0,245,255,0.3)]`} 
                   />
                 </div>
               </div>

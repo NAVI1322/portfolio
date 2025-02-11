@@ -3,7 +3,7 @@ import { useGLTF, OrbitControls, useAnimations } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ErrorBoundary } from 'react-error-boundary'
 import { motion } from 'framer-motion'
-import { Linkedin, Music2Icon } from 'lucide-react'
+import { Linkedin, Github, Music2Icon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
 // Add background music URL - replace with your actual music file path
@@ -188,7 +188,7 @@ export function ModelCanvas() {
         {/* LinkedIn Button with Tooltip */}
         <motion.div className="relative group">
           <motion.a
-            href="https://linkedin.com/in/yourusername"
+            href="https://www.linkedin/in/navneet7"
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 rounded-full border border-[#00F5FF]/20 bg-black/20 backdrop-blur-sm
@@ -205,9 +205,34 @@ export function ModelCanvas() {
             rounded-lg border border-[#00F5FF]/20 bg-black/80 backdrop-blur-sm
             opacity-0 group-hover:opacity-100 transition-opacity duration-300
             pointer-events-none whitespace-nowrap">
-            <span className="text-[#00F5FF] text-sm font-cyber">Connect with me!</span>
+            <span className="text-[#00F5FF] text-sm font-cyber">Yes, the 3D model looks like me! Connect on LinkedIn</span>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 rotate-45 
               w-2 h-2 bg-black/80 border-t border-r border-[#00F5FF]/20"></div>
+          </div>
+        </motion.div>
+
+        {/* GitHub Button with Tooltip */}
+        <motion.div className="relative group">
+          <motion.a
+            href="https://www.github.com/navi1322"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-3 rounded-full border border-[#B537F2]/20 bg-black/20 backdrop-blur-sm
+              text-[#B537F2] hover:border-[#B537F2]/50 hover:text-white
+              transition-all duration-300 flex items-center justify-center
+              hover:shadow-[0_0_15px_rgba(181,55,242,0.3)]"
+            whileHover={{ scale: 1.1, y: -5 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Github className="w-5 h-5" />
+          </motion.a>
+          <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 
+            rounded-lg border border-[#B537F2]/20 bg-black/80 backdrop-blur-sm
+            opacity-0 group-hover:opacity-100 transition-opacity duration-300
+            pointer-events-none whitespace-nowrap">
+            <span className="text-[#B537F2] text-sm font-cyber">Check out my projects!</span>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 rotate-45 
+              w-2 h-2 bg-black/80 border-t border-r border-[#B537F2]/20"></div>
           </div>
         </motion.div>
 
@@ -233,7 +258,6 @@ export function ModelCanvas() {
             }}
           >
             <Music2Icon className="w-5 h-5" />
-            {/* Animated Waves */}
             {isMusicPlaying && (
               <div className="absolute -right-1 -top-1">
                 <motion.div

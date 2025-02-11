@@ -9,9 +9,9 @@ const certifications = [
     credentialId: 'AWS-123456',
     link: 'https://aws.amazon.com',
     skills: ['Cloud Architecture', 'AWS Services', 'Security'],
-    color: 'from-white/10 to-white/5',
-    hoverColor: 'group-hover:from-[#00F5FF]/10 group-hover:to-[#00F5FF]/5',
-    shadowColor: 'shadow-[#00F5FF]/10'
+    color: 'from-neon.cyan/20 to-neon.purple/20',
+    hoverColor: 'group-hover:from-neon.cyan/30 group-hover:to-neon.purple/30',
+    shadowColor: 'shadow-neon.cyan/20'
   },
   {
     title: 'Meta Frontend Developer',
@@ -20,9 +20,9 @@ const certifications = [
     credentialId: 'META-789012',
     link: 'https://meta.com',
     skills: ['React', 'JavaScript', 'Web Development'],
-    color: 'from-white/10 to-white/5',
-    hoverColor: 'group-hover:from-[#00F5FF]/10 group-hover:to-[#00F5FF]/5',
-    shadowColor: 'shadow-[#00F5FF]/10'
+    color: 'from-neon.purple/20 to-neon.pink/20',
+    hoverColor: 'group-hover:from-neon.purple/30 group-hover:to-neon.pink/30',
+    shadowColor: 'shadow-neon.purple/20'
   },
   {
     title: 'Google Cloud Professional',
@@ -31,9 +31,9 @@ const certifications = [
     credentialId: 'GCP-345678',
     link: 'https://cloud.google.com',
     skills: ['Cloud Computing', 'DevOps', 'Kubernetes'],
-    color: 'from-white/10 to-white/5',
-    hoverColor: 'group-hover:from-[#00F5FF]/10 group-hover:to-[#00F5FF]/5',
-    shadowColor: 'shadow-[#00F5FF]/10'
+    color: 'from-neon.pink/20 to-neon.cyan/20',
+    hoverColor: 'group-hover:from-neon.pink/30 group-hover:to-neon.cyan/30',
+    shadowColor: 'shadow-neon.pink/20'
   },
   {
     title: 'Advanced React & GraphQL',
@@ -42,9 +42,9 @@ const certifications = [
     credentialId: 'WB-901234',
     link: 'https://reactcourse.com',
     skills: ['React', 'GraphQL', 'Node.js'],
-    color: 'from-white/10 to-white/5',
-    hoverColor: 'group-hover:from-[#00F5FF]/10 group-hover:to-[#00F5FF]/5',
-    shadowColor: 'shadow-[#00F5FF]/10'
+    color: 'from-neon.cyan/20 to-neon.purple/20',
+    hoverColor: 'group-hover:from-neon.cyan/30 group-hover:to-neon.purple/30',
+    shadowColor: 'shadow-neon.cyan/20'
   }
 ]
 
@@ -54,7 +54,7 @@ export default function Certifications() {
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-[#00F5FF]/5 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-neon.purple/5 to-background" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,10 +73,10 @@ export default function Certifications() {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <motion.div 
-                className="absolute inset-0 bg-[#00F5FF] opacity-10 blur-xl rounded-full"
+                className="absolute inset-0 bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink opacity-30 blur-xl rounded-full"
                 animate={{
                   scale: [1, 1.2, 1],
-                  opacity: [0.1, 0.15, 0.1]
+                  opacity: [0.3, 0.4, 0.3]
                 }}
                 transition={{
                   duration: 3,
@@ -121,11 +121,11 @@ export default function Certifications() {
             >
               {/* Certificate Card */}
               <div className="relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm 
-                border border-white/5 transition-all duration-500 
-                hover:border-[#00F5FF]/20 hover:shadow-lg hover:shadow-[#00F5FF]/5"
+                border border-white/10 transition-all duration-500 
+                hover:border-neon.cyan/30 hover:shadow-lg hover:shadow-neon.cyan/10"
               >
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 
                   bg-gradient-to-br ${cert.color}`} />
                 
                 {/* Content */}
@@ -135,32 +135,32 @@ export default function Certifications() {
                     <motion.div
                       whileHover={{ rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.7, ease: "easeOut" }}
-                      className="relative flex-none p-3 rounded-xl 
-                        bg-white/5 border border-white/10
-                        group-hover:border-[#00F5FF]/20 group-hover:bg-[#00F5FF]/5
-                        transition-all duration-500 ease-out"
+                      className={`relative flex-none p-3 rounded-xl 
+                        bg-gradient-to-br ${cert.color} ${cert.hoverColor} 
+                        bg-opacity-10 border border-neon.cyan/20
+                        transition-all duration-500 ease-out ${cert.shadowColor}`}
                     >
-                      <Medal className="w-6 h-6 text-white/70 group-hover:text-[#00F5FF] transition-colors duration-300" />
+                      <Medal className="w-6 h-6 text-neon.cyan group-hover:text-white transition-colors duration-300" />
                     </motion.div>
 
                     <div className="flex-1">
                       {/* Title and Organization */}
                       <div className="space-y-1">
-                        <h3 className="text-xl font-future text-white group-hover:text-[#00F5FF] transition-colors duration-300">
+                        <h3 className="text-xl font-future text-neon.cyan group-hover:text-white transition-colors duration-300">
                           {cert.title}
                         </h3>
-                        <p className="font-cyber text-sm text-white/60">
+                        <p className="font-cyber text-sm text-neon.cyan/60">
                           {cert.organization}
                         </p>
                       </div>
 
                       {/* Details */}
                       <div className="flex items-center gap-4 mt-4 text-sm">
-                        <div className="flex items-center gap-1 text-white/60">
+                        <div className="flex items-center gap-1 text-neon.cyan/60">
                           <Calendar className="w-4 h-4" />
                           <span>{cert.date}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-white/60">
+                        <div className="flex items-center gap-1 text-neon.cyan/60">
                           <Sparkles className="w-4 h-4" />
                           <span>{cert.credentialId}</span>
                         </div>
@@ -175,9 +175,9 @@ export default function Certifications() {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.1 }}
                             className="px-3 py-1 rounded-full text-xs font-cyber
-                              bg-white/5 border border-white/10
-                              group-hover:border-[#00F5FF]/20 group-hover:bg-[#00F5FF]/5
-                              text-white/70 group-hover:text-[#00F5FF]
+                              bg-black/20 border border-neon.cyan/20
+                              group-hover:border-neon.cyan/30 group-hover:bg-neon.cyan/5
+                              text-neon.cyan/70 group-hover:text-neon.cyan
                               transition-all duration-300"
                           >
                             {skill}
@@ -190,7 +190,8 @@ export default function Certifications() {
                         href={cert.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 mt-4 text-sm font-future text-white/60 hover:text-[#00F5FF] transition-colors"
+                        className="inline-flex items-center gap-2 mt-4 text-sm font-future 
+                          text-neon.cyan/60 hover:text-neon.cyan transition-colors"
                         whileHover={{ x: 5 }}
                       >
                         Verify Certificate
@@ -201,7 +202,7 @@ export default function Certifications() {
 
                   {/* Bottom Gradient Line */}
                   <div className="absolute bottom-0 left-0 right-0 h-[1px] 
-                    bg-gradient-to-r from-transparent via-[#00F5FF]/20 to-transparent
+                    bg-gradient-to-r from-transparent via-neon.cyan/30 to-transparent
                     opacity-0 group-hover:opacity-100 transition-all duration-500" />
                 </div>
               </div>
