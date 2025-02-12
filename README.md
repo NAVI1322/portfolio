@@ -170,9 +170,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_twitter)
+Your Name - [@your_X](https://x.com/navneet35442604?s=21)
 
-Project Link: [https://github.com/yourusername/portfolio](https://github.com/yourusername/portfolio)
+Project Link: [https://github.com/yourusername/portfolio](https://github.com/navi1322/portfolio)
 
 ---
 
