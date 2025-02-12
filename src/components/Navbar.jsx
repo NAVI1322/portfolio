@@ -77,13 +77,41 @@ export default function Navbar() {
           <motion.a
             href="#home"
             onClick={(e) => handleNavClick(e, '#home')}
-            className="nav-logo flex items-center gap-1"
+            className="nav-logo flex items-center gap-1 relative"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="font-cyber font-bold text-3xl text-neon.cyan">Navi</span>
-            <span className="font-cyber font-bold text-3xl text-neon.purple">X</span>
-            <span className="font-cyber font-bold text-3xl text-neon.pink">dev</span>
+            <div className="flex items-center gap-1 overflow-hidden">
+              <motion.span
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="font-cyber font-bold text-3xl text-neon.cyan"
+              >
+                Navi
+              </motion.span>
+              <motion.span
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.5,
+                  type: "spring",
+                  stiffness: 200
+                }}
+                className="font-cyber font-bold text-3xl text-neon.purple"
+              >
+                X
+              </motion.span>
+              <motion.span
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="font-cyber font-bold text-3xl text-neon.pink"
+              >
+                dev
+              </motion.span>
+            </div>
           </motion.a>
 
           {/* Desktop Navigation */}

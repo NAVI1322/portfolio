@@ -27,13 +27,13 @@ export default function Contact() {
       // Create email content
       const emailSubject = formData.subject
       const emailBody = `
-From: ${formData.name} (${formData.email})
+From: ${formData.name}
 
 ${formData.message}
       `
       
       // Create mailto link with encoded content
-      const mailtoLink = `mailto:your.email@example.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+      const mailtoLink = `mailto:navneet.sharmaxdev@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
       
       // Open default email client
       window.location.href = mailtoLink
@@ -159,26 +159,6 @@ ${formData.message}
                     required
                   />
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neon.cyan/60" />
-                </div>
-              </div>
-
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label className="font-future text-sm text-neon.cyan/80" htmlFor="email">
-                  Your Email
-                </label>
-                <div className="relative">
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="font-cyber pl-10 bg-white/5 border-white/10 focus:border-neon.cyan/50 placeholder:text-white/20"
-                    placeholder="john@example.com"
-                    required
-                  />
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neon.cyan/60" />
                 </div>
               </div>
 

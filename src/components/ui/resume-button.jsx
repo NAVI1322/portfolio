@@ -1,12 +1,22 @@
 import { motion } from 'framer-motion'
 import { Download } from 'lucide-react'
 import { Button } from './button'
+import { useToast } from './use-toast'
 
 export function ResumeButton({ className, variant = 'default' }) {
+  const { toast } = useToast()
+
   const handleDownload = async () => {
     try {
       const response = await fetch('/resume.pdf')
-      if (!response.ok) throw new Error('Resume not found')
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          title: "Resume not available",
+          description: "Please check back later."
+        })
+        return
+      }
       
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
@@ -17,8 +27,17 @@ export function ResumeButton({ className, variant = 'default' }) {
       
       // Cleanup
       window.URL.revokeObjectURL(url)
+      toast({
+        title: "Success!",
+        description: "Resume downloaded successfully!"
+      })
     } catch (error) {
       console.error('Error downloading resume:', error)
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error downloading resume. Please try again later."
+      })
     }
   }
 

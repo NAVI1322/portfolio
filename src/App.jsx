@@ -1,5 +1,6 @@
 import { motion, useScroll } from 'framer-motion'
 import { Toaster } from '@/components/ui/toaster'
+import { Toaster as SonnerToaster } from 'sonner'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import Skills from '@/components/Skills'
@@ -43,6 +44,7 @@ export default function App() {
       </main>
 
       <Toaster />
+      <SonnerToaster position="top-right" richColors />
     </div>
   )
 }

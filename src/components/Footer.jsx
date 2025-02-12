@@ -18,7 +18,7 @@ const socialLinks = [
   {
     name: 'Email',
     icon: Mail,
-    href: 'mailto:your@email.com',
+    href: 'mailto:navneet.sharmaxdev@gmail.com',
     color: 'from-neon.pink to-neon.cyan'
   }
 ]

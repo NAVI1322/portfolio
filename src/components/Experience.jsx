@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Building2, ArrowUpRight, Sparkles, FileDown } from 'lucide-react'
+import { Calendar, Building2, ArrowUpRight, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SparklesCore } from './magicui/sparkles'
 import React, { useState } from 'react'
 import { AnimatedBackground } from './magicui/animated-background'
@@ -50,63 +50,44 @@ const experiences = [
 ]
 
 export default function Experience() {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
-  // Animation variants for better organization and reuse
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.3,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: index => ({
+  const slideVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.8,
+      rotateY: direction > 0 ? 45 : -45
+    }),
+    center: {
+      x: 0,
       opacity: 1,
-      y: 0,
+      scale: 1,
+      rotateY: 0,
       transition: {
-        duration: 0.3,
-        delay: index * 0.1,
-        ease: [0.22, 1, 0.36, 1]
+        duration: 0.5,
+        type: "spring",
+        stiffness: 300,
+        damping: 30
       }
+    },
+    exit: (direction) => ({
+      x: direction > 0 ? -1000 : 1000,
+      opacity: 0,
+      scale: 0.8,
+      rotateY: direction > 0 ? -45 : 45
     })
   };
 
-  const expandVariants = {
-    closed: { 
-      height: 0, 
-      opacity: 0,
-      transition: {
-        height: {
-          duration: 0.2,
-          ease: [0.33, 1, 0.68, 1]
-        },
-        opacity: {
-          duration: 0.1
-        }
-      }
-    },
-    open: { 
-      height: "auto", 
-      opacity: 1,
-      transition: {
-        height: {
-          duration: 0.2,
-          ease: [0.33, 1, 0.68, 1]
-        },
-        opacity: {
-          duration: 0.2,
-          delay: 0.05
-        }
-      }
-    }
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset, velocity) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const paginate = (newDirection) => {
+    setDirection(newDirection);
+    setActiveIndex((prevIndex) => (prevIndex + newDirection + experiences.length) % experiences.length);
   };
 
   return (
@@ -114,13 +95,33 @@ export default function Experience() {
       {/* Animated Background */}
       <AnimatedBackground />
 
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px]">
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-neon.cyan/20 via-neon.purple/20 to-neon.pink/20 blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              rotate: [0, 360],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        </div>
+      </div>
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-20"
         >
           <div className="inline-block">
             <motion.div
@@ -141,7 +142,7 @@ export default function Experience() {
                 }}
               />
               <h2 className="font-future text-4xl md:text-5xl px-8 py-4 text-white relative z-10">
-                My Experience
+                My Journey
                 <div className="absolute inset-0 bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink opacity-50 blur-lg -z-10" />
                 <motion.div
                   className="absolute -bottom-2 left-0 right-0 h-[3px] bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink"
@@ -152,221 +153,236 @@ export default function Experience() {
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 />
-                {/* Decorative elements */}
-                <div className="absolute -left-4 -top-4 w-8 h-8 border-t-2 border-l-2 border-neon.cyan" />
-                <div className="absolute -right-4 -bottom-4 w-8 h-8 border-b-2 border-r-2 border-neon.pink" />
               </h2>
             </motion.div>
           </div>
           <p className="font-tech text-base text-neon.green/90 max-w-xl mx-auto mt-4">
-            Building digital experiences and growing through challenges
+            A timeline of my professional growth and achievements
           </p>
         </motion.div>
 
-        {/* Enhanced Download Resume Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="text-center mb-16"
-        >
-          <motion.a
-            href="/path-to-your-resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-xl overflow-hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+        {/* Experience Carousel */}
+        <div className="relative h-[600px] perspective-1000">
+          {/* Navigation Buttons */}
+          <motion.button
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-background/30 backdrop-blur-sm border border-neon.cyan/20 text-neon.cyan hover:bg-background/50 hover:border-neon.cyan/40 transition-all duration-300"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => paginate(-1)}
           >
-            {/* Button Background with improved gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-neon.cyan/20 via-neon.purple/20 to-neon.pink/20 backdrop-blur-sm border border-white/10" />
-            
-            {/* Inner background with better contrast */}
-            <div className="absolute inset-[1px] bg-background/80 rounded-xl z-0" />
-            
-            {/* Enhanced Glow Effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="absolute inset-0 bg-gradient-to-r from-neon.cyan/30 via-neon.purple/30 to-neon.pink/30 blur-xl" />
-            </div>
+            <ChevronLeft className="w-6 h-6" />
+          </motion.button>
+          <motion.button
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-background/30 backdrop-blur-sm border border-neon.cyan/20 text-neon.cyan hover:bg-background/50 hover:border-neon.cyan/40 transition-all duration-300"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => paginate(1)}
+          >
+            <ChevronRight className="w-6 h-6" />
+          </motion.button>
 
-            {/* Animated gradient background */}
+          {/* Experience Cards */}
+          <AnimatePresence initial={false} custom={direction}>
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-neon.cyan/10 via-neon.purple/10 to-neon.pink/10"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
+              key={activeIndex}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
               transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear",
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
               }}
-              style={{ backgroundSize: "200% 200%" }}
-            />
-
-            {/* Content with improved animation */}
-            <span className="relative z-10 font-future text-white flex items-center gap-2">
-              <motion.div
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <FileDown className="w-5 h-5 text-neon.cyan" />
-              </motion.div>
-              <span className="relative">
-                Download Resume
-                <div className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-              </span>
-            </span>
-          </motion.a>
-        </motion.div>
-
-        {/* Experience Timeline */}
-        <div className="max-w-2xl mx-auto px-6">
-          {experiences.map((experience, index) => (
-            <motion.div
-              key={index}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "50px" }}
-              className="mb-12 last:mb-0"
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
-              onClick={() => setSelectedIndex(selectedIndex === index ? null : index)}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x);
+                if (swipe < -swipeConfidenceThreshold) {
+                  paginate(1);
+                } else if (swipe > swipeConfidenceThreshold) {
+                  paginate(-1);
+                }
+              }}
+              className="absolute inset-0 flex items-center justify-center"
             >
-              <div className="relative group cursor-pointer">
-                {/* Timeline connector */}
-                {index !== experiences.length - 1 && (
-                  <div 
-                    className="absolute left-8 top-20 w-px h-[calc(100%+3rem)] bg-gradient-to-b from-neon.cyan/20 to-transparent"
-                  />
-                )}
-
-                <div className="relative flex gap-6">
-                  {/* Icon */}
+              <div className="w-full max-w-3xl mx-auto">
+                <div className="relative group">
+                  {/* Card Background with 3D effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-neon.cyan/20 via-neon.purple/20 to-neon.pink/20 rounded-2xl transform -rotate-6 transition-transform duration-300 group-hover:rotate-0" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-neon.cyan/20 via-neon.purple/20 to-neon.pink/20 rounded-2xl transform rotate-3 transition-transform duration-300 group-hover:rotate-0" />
+                  
+                  {/* Card Content */}
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    className={`relative flex-none w-16 h-16 rounded-xl bg-gradient-to-br ${experience.color} p-[2px] shadow-2xl`}
+                    className="relative bg-background/40 backdrop-blur-lg rounded-xl p-8 border border-neon.purple/20 overflow-hidden"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="w-full h-full rounded-[10px] bg-background/90 backdrop-blur-xl flex items-center justify-center text-2xl">
-                      {experience.icon}
-                    </div>
-                    {/* Glow effect */}
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ 
-                        opacity: hoveredIndex === index ? 1 : 0,
-                        scale: hoveredIndex === index ? 1.2 : 0.8
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute -inset-2 bg-gradient-to-br from-neon.cyan/50 to-neon.purple/20 rounded-xl blur-xl"
-                    />
-                  </motion.div>
+                    {/* Glowing Corner Effects */}
+                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-neon.cyan via-neon.purple to-neon.pink opacity-30 blur-3xl transform rotate-45" />
+                    <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-neon.pink via-neon.purple to-neon.cyan opacity-30 blur-3xl transform -rotate-45" />
 
-                  {/* Content */}
-                  <div className="flex-1">
-                    <motion.div
-                      whileHover={{ scale: 1.01 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                      className={`bg-background/50 backdrop-blur-sm rounded-xl p-6 border border-neon.purple/10 transition-all duration-200 
-                        ${hoveredIndex === index ? 'shadow-lg border-neon.cyan/20' : ''}`}
-                    >
-                      {/* Header */}
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <h3 className={`font-hero text-xl text-glow shadow-neon.cyan bg-clip-text text-transparent bg-gradient-to-r ${experience.color}`}>
-                          {experience.title}
-                        </h3>
-                        <div className="flex items-center gap-2 text-sm font-future text-neon.cyan/60">
-                          <Calendar className="w-4 h-4" />
-                          <span>{experience.duration}</span>
-                        </div>
-                      </div>
-
-                      {/* Company & Location */}
-                      <div className="flex flex-wrap items-center gap-4 mb-4 text-sm font-future text-neon.purple/60">
-                        <div className="flex items-center gap-1">
-                          <Building2 className="w-4 h-4" />
-                          <span>{experience.company}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <ArrowUpRight className="w-4 h-4" />
-                          <span>{experience.location}</span>
-                        </div>
-                      </div>
-
-                      {/* Description with updated animations */}
-                      <AnimatePresence mode="wait">
-                        {selectedIndex === index && (
+                    {/* Header */}
+                    <div className="relative mb-8">
+                      <div className="flex items-center gap-6">
+                        {/* Enhanced Logo Container */}
+                        <div className="relative">
                           <motion.div
-                            variants={expandVariants}
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                            className="overflow-hidden"
-                          >
-                            <ul className="space-y-2 mb-4">
-                              {experience.description.map((item, i) => (
-                                <motion.li
-                                  key={i}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ 
-                                    duration: 0.2,
-                                    delay: i * 0.05,
-                                    ease: [0.22, 1, 0.36, 1]
+                            className="absolute -inset-4 bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink opacity-40 blur-lg rounded-full"
+                            animate={{
+                              scale: [1, 1.2, 1],
+                              rotate: [0, 180, 360],
+                              opacity: [0.3, 0.5, 0.3],
+                            }}
+                            transition={{
+                              duration: 8,
+                              repeat: Infinity,
+                              ease: "linear"
+                            }}
+                          />
+                          <div className={`relative w-20 h-20 rounded-2xl bg-gradient-to-br ${experiences[activeIndex].color} p-[2px] transform group-hover:rotate-12 transition-all duration-500 hover:scale-110`}>
+                            <div className="relative w-full h-full rounded-[14px] bg-background overflow-hidden">
+                              {/* Animated Border */}
+                              <motion.div
+                                className="absolute inset-0"
+                                animate={{
+                                  background: [
+                                    `linear-gradient(0deg, transparent 0%, ${experiences[activeIndex].color.split(' ')[1]} 100%)`,
+                                    `linear-gradient(360deg, transparent 0%, ${experiences[activeIndex].color.split(' ')[1]} 100%)`
+                                  ],
+                                  opacity: [0.1, 0.3, 0.1]
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Infinity,
+                                  ease: "easeInOut"
+                                }}
+                              />
+                              
+                              {/* Icon Container */}
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <motion.div
+                                  className="text-4xl transform"
+                                  animate={{
+                                    scale: [1, 1.1, 1],
+                                    rotate: [0, 5, 0, -5, 0]
                                   }}
-                                  className="flex items-start gap-2 text-sm font-cyber text-neon.cyan/60"
-                                >
-                                  <Sparkles className="w-4 h-4 flex-none mt-1" />
-                                  <span>{item}</span>
-                                </motion.li>
-                              ))}
-                            </ul>
-                            
-                            {/* Skills */}
-                            <div className="flex flex-wrap gap-2">
-                              {experience.skills.map((skill, i) => (
-                                <motion.span
-                                  key={i}
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ 
-                                    duration: 0.2,
-                                    delay: i * 0.05,
-                                    ease: [0.22, 1, 0.36, 1]
+                                  transition={{
+                                    duration: 4,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
                                   }}
-                                  className={`font-tech text-xs px-2 py-1 rounded-full bg-gradient-to-r ${experience.color} text-white shadow-lg`}
                                 >
-                                  {skill}
-                                </motion.span>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                                  {experiences[activeIndex].icon}
+                                </motion.div>
+                              </div>
 
-                      {/* Click to expand hint */}
-                      {selectedIndex !== index && (
-                        <motion.p
-                          initial={{ opacity: 0 }}
-                          animate={{ 
-                            opacity: hoveredIndex === index ? 1 : 0,
-                            y: hoveredIndex === index ? 0 : 5
-                          }}
-                          transition={{ duration: 0.2 }}
-                          className="font-cyber text-sm text-neon.cyan/60 mt-2"
+                              {/* Shine Effect */}
+                              <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
+                                animate={{
+                                  x: ['-200%', '200%']
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Infinity,
+                                  ease: "easeInOut",
+                                  repeatDelay: 1
+                                }}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  transform: 'skewX(-20deg)'
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h3 className={`text-2xl font-future bg-clip-text text-transparent bg-gradient-to-r ${experiences[activeIndex].color} mb-2`}>
+                            {experiences[activeIndex].title}
+                          </h3>
+                          <p className="font-cyber text-lg text-neon.cyan/60">
+                            {experiences[activeIndex].company}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex flex-wrap items-center gap-6 mt-4 text-base font-cyber text-neon.cyan/60">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-5 h-5" />
+                          <span>{experiences[activeIndex].duration}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <ArrowUpRight className="w-5 h-5" />
+                          <span>{experiences[activeIndex].location}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <div className="space-y-4 mb-8">
+                      {experiences[activeIndex].description.map((item, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="flex items-start gap-4"
                         >
-                          Click to see more details
-                        </motion.p>
-                      )}
-                    </motion.div>
-                  </div>
+                          <Sparkles className="w-5 h-5 text-neon.cyan flex-shrink-0 mt-1" />
+                          <p className="font-cyber text-base text-neon.cyan/80">{item}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Skills */}
+                    <div className="flex flex-wrap gap-3">
+                      {experiences[activeIndex].skills.map((skill, i) => (
+                        <motion.span
+                          key={i}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: i * 0.1 }}
+                          className={`px-4 py-2 rounded-full text-sm font-cyber
+                            bg-gradient-to-r ${experiences[activeIndex].color} bg-opacity-10
+                            border border-neon.cyan/20 text-white/90
+                            group-hover:border-neon.cyan/50 group-hover:bg-opacity-20
+                            transition-all duration-300`}
+                        >
+                          {skill}
+                        </motion.span>
+                      ))}
+                    </div>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
-          ))}
+          </AnimatePresence>
+
+          {/* Navigation Dots */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
+            {experiences.map((_, index) => (
+              <motion.button
+                key={index}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === activeIndex 
+                    ? 'bg-neon.cyan scale-125' 
+                    : 'bg-neon.cyan/30 hover:bg-neon.cyan/50'
+                }`}
+                onClick={() => {
+                  const newDirection = index > activeIndex ? 1 : -1;
+                  setDirection(newDirection);
+                  setActiveIndex(index);
+                }}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
