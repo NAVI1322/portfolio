@@ -248,7 +248,6 @@ button:focus-visible {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
 .holographic-effect {
   background: linear-gradient(
     45deg,
@@ -676,3 +675,4 @@ button:focus-visible {
   from { opacity: 1 }
   to { opacity: 0 }
 }
+

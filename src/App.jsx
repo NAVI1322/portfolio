@@ -1,18 +1,37 @@
 import { motion, useScroll } from 'framer-motion'
+import { Suspense, lazy, useState, useEffect } from 'react'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as SonnerToaster } from 'sonner'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
-import Skills from '@/components/Skills'
-import Experience from '@/components/Experience'
-import Projects from '@/components/Projects'
-import Achievements from '@/components/Achievements'
-import Certifications from '@/components/Certifications'
-import Contact from '@/components/Contact'
-import Footer from '@/components/Footer'
+import LoadingScreen from '@/components/LoadingScreen'
+import LoadingSpinner from '@/components/LoadingSpinner'
+
+// Lazy load non-critical components
+const Skills = lazy(() => import('@/components/Skills'))
+const Experience = lazy(() => import('@/components/Experience'))
+const Projects = lazy(() => import('@/components/Projects'))
+const Achievements = lazy(() => import('@/components/Achievements'))
+const Certifications = lazy(() => import('@/components/Certifications'))
+const Contact = lazy(() => import('@/components/Contact'))
+const Footer = lazy(() => import('@/components/Footer'))
 
 export default function App() {
   const { scrollYProgress } = useScroll()
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate loading time and resources loading
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000) // Show loading screen for 2 seconds
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (isLoading) {
+    return <LoadingScreen />
+  }
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground antialiased transition-colors duration-300">
@@ -31,15 +50,19 @@ export default function App() {
           <Hero />
         </div>
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Skills />
-          <Experience />
-          <Projects />
-          <Achievements />
-          <Certifications />
-          <Contact />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Skills />
+            <Experience />
+            <Projects />
+            <Achievements />
+            <Certifications />
+            <Contact />
+          </Suspense>
         </div>
         <div className="w-full">
-          <Footer />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Footer />
+          </Suspense>
         </div>
       </main>
 

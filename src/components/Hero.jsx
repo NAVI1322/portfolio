@@ -1,8 +1,12 @@
 import { motion } from 'framer-motion'
+import { Suspense, lazy } from 'react'
 import { Button } from '@/components/ui/button'
-import { ModelCanvas } from './Model3D'
 import { Code2, GraduationCap, ArrowRight } from 'lucide-react'
-import { SparklesCore } from './magicui/sparkles'
+import LoadingSpinner from './LoadingSpinner'
+
+// Lazy load heavy components
+const SparklesCore = lazy(() => import('./magicui/sparkles').then(mod => ({ default: mod.SparklesCore })))
+const ModelCanvas = lazy(() => import('./Model3D').then(mod => ({ default: mod.ModelCanvas })))
 
 export default function Hero() {
   return (
@@ -12,17 +16,19 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.05)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
 
-      {/* Mobile Background Animation */}
+      {/* Mobile Background Animation - Lazy loaded */}
       <div className="absolute inset-0 lg:hidden">
-        <SparklesCore
-          id="tsparticlesfullpage"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.4}
-          particleDensity={100}
-          className="w-full h-full"
-          particleColor="#00F5FF"
-        />
+        <Suspense fallback={null}>
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={50} // Reduced density
+            className="w-full h-full"
+            particleColor="#00F5FF"
+          />
+        </Suspense>
       </div>
 
       {/* Content */}
@@ -213,14 +219,16 @@ export default function Hero() {
 
           {/* Right Content - Model */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
             className="relative lg:h-[500px] w-full order-first lg:order-last"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-neon.purple/10 to-neon.cyan/10 rounded-3xl blur-3xl opacity-30" />
             <div className="relative h-full w-full">
-              <ModelCanvas />
+              <Suspense fallback={<LoadingSpinner />}>
+                <ModelCanvas />
+              </Suspense>
             </div>
           </motion.div>
         </div>

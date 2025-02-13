@@ -1,10 +1,9 @@
 import React, { useRef, Suspense, useEffect, useState } from 'react'
-import { useGLTF, OrbitControls, useAnimations } from '@react-three/drei'
+import { useGLTF, OrbitControls, useAnimations, Stage, PresentationControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { ErrorBoundary } from 'react-error-boundary'
 import { motion } from 'framer-motion'
 import { Linkedin, Github, Music2Icon } from 'lucide-react'
-import { useTheme } from 'next-themes'
 
 // Add background music URL - replace with your actual music file path
 const BACKGROUND_MUSIC_URL = '/sounds/background-music.mp3'
@@ -13,19 +12,57 @@ const MODEL_PATH = '/models/model (1).glb'
 function Scene({ isAnimating }) {
   return (
     <>
+      {/* Ambient light for general illumination */}
       <ambientLight intensity={0.8} />
-      <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
+      
+      {/* Main directional light for shadows */}
+      <directionalLight 
+        position={[10, 10, 10]} 
+        intensity={1.5} 
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-far={50}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+      />
+      
+      {/* Back light for better depth */}
+      <directionalLight
+        position={[-5, 5, -5]}
+        intensity={0.5}
+      />
+
+      {/* Ground plane for shadow casting */}
+      <mesh 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        position={[0, -0.5, 0]} 
+        receiveShadow
+      >
+        <planeGeometry args={[100, 100]} />
+        <shadowMaterial transparent opacity={0.4} />
+      </mesh>
+
       <Model isAnimating={isAnimating} />
     </>
   )
 }
 
-const Model = React.memo(({ scale = 1.1, position = [0, -1, 0], isAnimating = false }) => {
+const Model = React.memo(({ scale = 1.3, position = [0, -0.2, 0], isAnimating = false }) => {
   const group = useRef()
   const { scene, animations } = useGLTF(MODEL_PATH)
   const { actions, mixer } = useAnimations(animations, group)
 
   useEffect(() => {
+    // Enable shadow casting for all meshes in the model
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true
+        child.receiveShadow = true
+      }
+    })
+
     if (animations.length && mixer && actions) {
       mixer.stopAllAction()
       if (isAnimating) {
@@ -36,7 +73,7 @@ const Model = React.memo(({ scale = 1.1, position = [0, -1, 0], isAnimating = fa
         }
       }
     }
-  }, [actions, animations, mixer, isAnimating])
+  }, [actions, animations, mixer, isAnimating, scene])
 
   return (
     <group ref={group} position={position} scale={scale}>
@@ -51,8 +88,6 @@ export function ModelCanvas() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
   const audioRef = useRef(null)
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
 
   useEffect(() => {
     audioRef.current = new Audio(BACKGROUND_MUSIC_URL)
@@ -78,17 +113,49 @@ export function ModelCanvas() {
   }
 
   return (
-    <div className="w-full h-full relative hidden lg:block">
+    <div className="w-full h-[600px] relative hidden lg:block">
+      {/* Background with gradient and grid pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-neon.purple/20 to-neon.cyan/20">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.05)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+      </div>
+
       <ErrorBoundary FallbackComponent={() => <div>Error loading 3D model</div>}>
         <Suspense fallback={<div className="text-center">Loading...</div>}>
           <Canvas
-            style={{ background: 'transparent' }}
-            camera={{
-              position: [0, 0, 4],
-              fov: 35
+            shadows="soft"
+            dpr={[1, 2]}
+            camera={{ 
+              fov: 45, 
+              position: [0, 2, 6],
+              near: 0.1,
+              far: 100
+            }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'transparent'
             }}
           >
-            <Scene isAnimating={isAnimating} />
+            <PresentationControls
+              speed={1.5}
+              global
+              zoom={0.8}
+              polar={[-0.1, Math.PI / 4]}
+              azimuth={[-Math.PI / 4, Math.PI / 4]}
+            >
+              <Stage 
+                environment={null} 
+                intensity={0.5} 
+                adjustCamera={false}
+                shadows="contact"
+                preset="rembrandt"
+              >
+                <Scene isAnimating={isAnimating} />
+              </Stage>
+            </PresentationControls>
             <OrbitControls
               enableZoom={false}
               enablePan={false}
