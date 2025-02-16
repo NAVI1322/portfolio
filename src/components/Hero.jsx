@@ -6,7 +6,7 @@ import LoadingSpinner from './LoadingSpinner'
 
 // Lazy load heavy components
 const SparklesCore = lazy(() => import('./magicui/sparkles').then(mod => ({ default: mod.SparklesCore })))
-const ModelCanvas = lazy(() => import('./Model3D').then(mod => ({ default: mod.ModelCanvas })))
+const ModelCanvas = lazy(() => import('./Model3D'))
 
 export default function Hero() {
   return (
