@@ -136,7 +136,7 @@ export default function Hero() {
                     transition={{ duration: 0.3, delay: 0.5 }}
                     className="inline-block"
                   >
-                    A Full Stack Web Developer passionate about crafting elegant digital experiences
+                    Toronto-based Full Stack Developer crafting elegant digital experiences
                   </motion.span>
                 </motion.p>
                 <motion.p 
