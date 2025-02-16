@@ -8,24 +8,110 @@ import {
   Cpu,
   Layers,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Box,
+  Layout,
+  Terminal,
+  Component
 } from 'lucide-react'
 import { OrbitingCircles } from './magicui/orbiting-circles'
 import { AnimatedBackground } from './magicui/animated-background'
+import { 
+  SiReact, 
+  SiVuedotjs, 
+  SiNextdotjs, 
+  SiTailwindcss, 
+  SiHtml5,
+  SiDotnet, 
+  SiFigma, 
+  SiSketch, 
+  SiNodedotjs, 
+  SiPython,
+  SiMongodb, 
+  SiPostgresql, 
+  SiMysql, 
+  SiFirebase, 
+  SiTypescript,
+  SiJavascript, 
+  SiBootstrap, 
+  SiMui,
+  SiFramer, 
+  SiThreedotjs,
+  SiDocker, 
+  SiAmazonaws, 
+  SiGit, 
+  SiGitlab, 
+  SiBitbucket,
+  SiExpress, 
+  SiSocketdotio,
+  SiCss3
+} from 'react-icons/si'
+
+// Technology to Icon mapping
+const techIcons = {
+  'React': SiReact,
+  'Vue': SiVuedotjs,
+  'Next.js': SiNextdotjs,
+  'TailwindCSS': SiTailwindcss,
+  'React Native': SiReact,
+  'Html': SiHtml5,
+  'CSS3': SiCss3,
+  'ASP.NET': SiDotnet,
+  'Figma': SiFigma,
+  'Sketch': SiSketch,
+  'Node.js': SiNodedotjs,
+  'Python': SiPython,
+  'MongoDB': SiMongodb,
+  'PostgreSQL': SiPostgresql,
+  'MySQL': SiMysql,
+  'Firebase': SiFirebase,
+  'express': SiExpress,
+  'sockets': SiSocketdotio,
+  'TypeScript': SiTypescript,
+  'JavaScript': SiJavascript,
+  'Bootstrap': SiBootstrap,
+  'Material UI': SiMui,
+  'shadcn': Component,
+  'framer motion': SiFramer,
+  'three.js': SiThreedotjs,
+  'Docker': SiDocker,
+  'AWS': SiAmazonaws,
+  'Git': SiGit,
+  'Gitlab': SiGitlab,
+  'Bitbucket': SiBitbucket,
+  'System Design': Layers,
+  'Design Patterns': Code2,
+  'API Design': Globe,
+  'Microservices': Database,
+  'Prototyping': Layout
+}
 
 const skills = [
   {
     title: 'Frontend Development',
     icon: Code2,
-    technologies: ['React', 'Vue', 'Next.js', 'TailwindCSS'],
-    orbitIcons: ['⚛️', '🎨', '📱', '⚡'],
+    technologies: [
+      { name: 'React', icon: SiReact },
+      { name: 'Vue', icon: SiVuedotjs },
+      { name: 'Next.js', icon: SiNextdotjs },
+      { name: 'TailwindCSS', icon: SiTailwindcss },
+      { name: 'React Native', icon: SiReact },
+      { name: 'Html', icon: SiHtml5 },
+      { name: 'CSS3', icon: SiCss3 },
+      { name: 'ASP.NET', icon: SiDotnet }
+    ],
+    orbitIcons: ['⚛️', '🎨', '📱', '⚡','⚛️', '🎨', '📱', '⚡'],
     color: 'from-neon.cyan to-neon.purple',
     description: 'Building beautiful and responsive user interfaces with modern frameworks and libraries.'
   },
   {
     title: 'UI/UX Design',
     icon: Palette,
-    technologies: ['Figma', 'Adobe XD', 'Sketch', 'Prototyping'],
+    technologies: [
+      { name: 'Figma', icon: SiFigma },
+      { name: 'Sketch', icon: SiSketch },
+      { name: 'Prototyping', icon: Layout }
+    ],
     orbitIcons: ['🎨', '✨', '🎯', '🔍'],
     color: 'from-neon.purple to-neon.pink',
     description: 'Creating intuitive and engaging user experiences with attention to detail and user research.'
@@ -33,7 +119,16 @@ const skills = [
   {
     title: 'Backend Development',
     icon: Database,
-    technologies: ['Node.js', 'Python', 'MongoDB', 'PostgreSQL'],
+    technologies: [
+      { name: 'Node.js', icon: SiNodedotjs },
+      { name: 'Python', icon: SiPython },
+      { name: 'MongoDB', icon: SiMongodb },
+      { name: 'PostgreSQL', icon: SiPostgresql },
+      { name: 'MySQL', icon: SiMysql },
+      { name: 'Firebase', icon: SiFirebase },
+      { name: 'express', icon: SiExpress },
+      { name: 'sockets', icon: SiSocketdotio }
+    ],
     orbitIcons: ['🚀', '🔧', '🗄️', '⚙️'],
     color: 'from-neon.pink to-neon.cyan',
     description: 'Developing robust server-side applications with scalable architectures and efficient databases.'
@@ -41,7 +136,21 @@ const skills = [
   {
     title: 'Web Technologies',
     icon: Globe,
-    technologies: ['HTML5', 'CSS3', 'JavaScript', 'TypeScript'],
+    technologies: [
+      { name: 'HTML5', icon: SiHtml5 },
+      { name: 'CSS3', icon: SiCss3 },
+      { name: 'JavaScript', icon: SiJavascript },
+      { name: 'TypeScript', icon: SiTypescript },
+      { name: 'React', icon: SiReact },
+      { name: 'Vue', icon: SiVuedotjs },
+      { name: 'Next.js', icon: SiNextdotjs },
+      { name: 'TailwindCSS', icon: SiTailwindcss },
+      { name: 'Bootstrap', icon: SiBootstrap },
+      { name: 'Material UI', icon: SiMui },
+      { name: 'shadcn', icon: Component },
+      { name: 'framer motion', icon: SiFramer },
+      { name: 'three.js', icon: SiThreedotjs }
+    ],
     orbitIcons: ['🌐', '💻', '⚡', '📱'],
     color: 'from-neon.cyan to-neon.purple',
     description: 'Mastering core web technologies and modern development practices for optimal performance.'
@@ -49,7 +158,13 @@ const skills = [
   {
     title: 'DevOps',
     icon: Cpu,
-    technologies: ['Docker', 'AWS', 'CI/CD', 'Git'],
+    technologies: [
+      { name: 'Docker', icon: SiDocker },
+      { name: 'AWS', icon: SiAmazonaws },
+      { name: 'Git', icon: SiGit },
+      { name: 'Gitlab', icon: SiGitlab },
+      { name: 'Bitbucket', icon: SiBitbucket }
+    ],
     orbitIcons: ['🐳', '☁️', '🔄', '📦'],
     color: 'from-neon.purple to-neon.pink',
     description: 'Implementing automated deployment pipelines and managing cloud infrastructure efficiently.'
@@ -57,7 +172,12 @@ const skills = [
   {
     title: 'Software Architecture',
     icon: Layers,
-    technologies: ['System Design', 'Design Patterns', 'API Design', 'Microservices'],
+    technologies: [
+      { name: 'System Design', icon: Layers },
+      { name: 'Design Patterns', icon: Code2 },
+      { name: 'API Design', icon: Globe },
+      { name: 'Microservices', icon: Database }
+    ],
     orbitIcons: ['🏗️', '📐', '🔌', '🎯'],
     color: 'from-neon.pink to-neon.cyan',
     description: 'Designing scalable and maintainable software systems with modern architectural patterns.'
@@ -230,8 +350,8 @@ export default function Skills() {
                             iconSize={36}
                             path={true}
                           >
-                            {skills[selectedIndex].orbitIcons.map((icon, i) => (
-                              <div key={i} className="relative group">
+                            {skills[selectedIndex].technologies.map((tech, techIndex) => (
+                              <div key={techIndex} className="relative group">
                                 <motion.div 
                                   className="flex items-center justify-center w-9 h-9 
                                     bg-background/80 rounded-full backdrop-blur-sm 
@@ -241,7 +361,9 @@ export default function Skills() {
                                   whileHover={{ scale: 1.2 }}
                                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                 >
-                                  <span className="text-xl">{icon}</span>
+                                  {React.createElement(tech.icon, {
+                                    className: "w-5 h-5 text-neon.cyan"
+                                  })}
                                 </motion.div>
                                 {/* Tooltip */}
                                 <div className="absolute opacity-0 group-hover:opacity-100 
@@ -251,7 +373,7 @@ export default function Skills() {
                                   -translate-x-1/2 whitespace-nowrap z-30"
                                 >
                                   <span className="font-tech text-xs text-white">
-                                    {skills[selectedIndex].technologies[i]}
+                                    {tech.name}
                                   </span>
                                 </div>
                               </div>
@@ -265,19 +387,22 @@ export default function Skills() {
                     <div className="mt-8">
                       <div className="flex flex-wrap gap-3 justify-center">
                         {skills[selectedIndex].technologies.map((tech, techIndex) => (
-                          <motion.span
+                          <motion.div
                             key={techIndex}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: techIndex * 0.1 }}
-                            className="px-4 py-1.5 rounded-full text-sm font-cyber
+                            className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-cyber
                               bg-background/40 border border-white/5
                               text-white/80 hover:text-neon.cyan
                               hover:border-neon.cyan/30 hover:bg-background/60
                               transition-all duration-300"
                           >
-                            {tech}
-                          </motion.span>
+                            {React.createElement(tech.icon, {
+                              className: "w-4 h-4"
+                            })}
+                            <span>{tech.name}</span>
+                          </motion.div>
                         ))}
                       </div>
                     </div>

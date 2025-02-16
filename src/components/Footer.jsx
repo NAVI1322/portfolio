@@ -41,13 +41,6 @@ export default function Footer() {
             viewport={{ once: true }}
             className="mb-8"
           >
-            <div className="flex items-center gap-2">
-              <Code2 className="w-6 h-6 text-neon.cyan" />
-              <span className="font-hero text-2xl bg-clip-text text-transparent bg-gradient-to-r from-neon.cyan via-neon.purple to-neon.pink">
-                NaviXdev
-              </span>
-              <Sparkles className="w-6 h-6 text-neon.pink" />
-            </div>
           </motion.div>
 
           {/* Social Links */}
@@ -103,9 +96,7 @@ export default function Footer() {
             transition={{ delay: 0.4 }}
             className="text-center"
           >
-            <p className="font-tech text-sm text-neon.green/60 mb-2">
-              Crafted with passion using React & Framer Motion
-            </p>
+            
             <p className="font-cyber text-sm text-neon.cyan/60">
               © {new Date().getFullYear()} NaviXdev. All rights reserved.
             </p>

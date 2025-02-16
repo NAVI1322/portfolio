@@ -1,62 +1,59 @@
 import { motion } from 'framer-motion'
 import React from 'react'
-import { Trophy, Star, Award, Target, Sparkles } from 'lucide-react'
+import { Trophy, Star, Award, Target, Sparkles, Medal, Crown, Rocket, Heart, Code2, Users, Globe } from 'lucide-react'
+import { AnimatedBackground } from './magicui/animated-background'
 
 const achievements = [
+  
   {
+    title: "Hackville 2025 Winner",
+    description: "Secured second place in Hackville 2025 for creating a cutting-edge tech solution that addressed real-world challenges.",
+    icon: Medal,
+    date: "2025",
+    color: "from-neon.purple via-neon.pink to-neon.cyan",
+    stats: "2nd Place",
+    featured: true
+  },
+  {
+    title: "NCT Hackathon Winner",
+    description: "First place in NCT Hackathon for developing an innovative solution. Competed against talented teams from across the region.",
     icon: Trophy,
-    title: 'Best Developer Award',
-    description: 'Recognized for outstanding contributions to web development',
-    year: '2023',
-    stats: '100+ Projects Delivered',
-    color: 'from-neon.cyan/20 to-neon.purple/20',
-    hoverColor: 'group-hover:from-neon.cyan/30 group-hover:to-neon.purple/30',
-    shadowColor: 'shadow-neon.cyan/20',
-    glowColor: 'neon.cyan'
+    date: "2024",
+    color: "from-neon.cyan via-neon.purple to-neon.pink",
+    stats: "2nd Place",
+    featured: true
   },
   {
-    icon: Star,
-    title: 'Top Performer',
-    description: 'Consistently delivered high-quality projects ahead of schedule',
-    year: '2022',
-    stats: '95% Success Rate',
-    color: 'from-neon.purple/20 to-neon.pink/20',
-    hoverColor: 'group-hover:from-neon.purple/30 group-hover:to-neon.pink/30',
-    shadowColor: 'shadow-neon.purple/20',
-    glowColor: 'neon.purple'
+    title: "BramHack Participant",
+    description: "Participated in BramHack, collaborating with diverse teams and developing innovative solutions under time constraints.",
+    icon: Code2,
+    date: "2024",
+    color: "from-neon.pink via-neon.cyan to-neon.purple",
+    stats: "Top 10 Teams"
   },
   {
-    icon: Award,
-    title: 'Innovation Excellence',
-    description: 'Led the development of groundbreaking features and technologies',
-    year: '2022',
-    stats: '15+ Innovations',
-    color: 'from-neon.cyan/20 to-neon.purple/20',
-    hoverColor: 'group-hover:from-neon.cyan/30 group-hover:to-neon.purple/30',
-    shadowColor: 'shadow-neon.cyan/20',
-    glowColor: 'neon.cyan'
+    title: "Digital Transformation Volunteer",
+    description: "Helped local businesses establish online presence through website development and digital strategy consulting.",
+    icon: Heart,
+    date: "2023-Present",
+    color: "from-neon.cyan via-neon.purple to-neon.pink",
+    stats: "2 Businesses Helped"
   },
   {
-    icon: Target,
-    title: 'Project Success',
-    description: 'Achieved 100% client satisfaction rate across all projects',
-    year: '2021',
-    stats: '50+ Happy Clients',
-    color: 'from-neon.purple/20 to-neon.pink/20',
-    hoverColor: 'group-hover:from-neon.purple/30 group-hover:to-neon.pink/30',
-    shadowColor: 'shadow-neon.purple/20',
-    glowColor: 'neon.purple'
+    title: "Open Source Contributor",
+    description: "Active contributor to various open-source projects, helping improve community-driven software.",
+    icon: Globe,
+    date: "2023-Present",
+    color: "from-neon.purple via-neon.pink to-neon.cyan",
+    stats: "10+ Contributions"
   }
 ]
 
 export default function Achievements() {
   return (
     <section id="achievements" className="py-20 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-neon.purple/5 to-background" />
-      </div>
+      {/* Animated Background */}
+      <AnimatedBackground />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
@@ -97,110 +94,152 @@ export default function Achievements() {
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 />
-                {/* Decorative elements */}
                 <div className="absolute -left-4 -top-4 w-8 h-8 border-t-2 border-l-2 border-neon.cyan" />
                 <div className="absolute -right-4 -bottom-4 w-8 h-8 border-b-2 border-r-2 border-neon.pink" />
               </h2>
             </motion.div>
           </div>
           <p className="font-tech text-base text-neon.green/90 max-w-xl mx-auto mt-4">
-            Milestones and recognition throughout my journey
+            Celebrating victories and contributions in tech
           </p>
         </motion.div>
 
-        {/* Achievement Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {achievements.map((achievement, index) => (
+        {/* Featured Achievements */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          {achievements.filter(a => a.featured).map((achievement, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="group"
+              className="group relative"
             >
-              {/* Achievement Card */}
-              <div className="relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm 
-                border border-white/5 transition-all duration-500 
-                hover:border-neon.cyan/30 hover:shadow-lg group"
-              >
-                {/* Gradient Overlay */}
+              <div className="relative h-full overflow-hidden rounded-xl border-2 border-neon.cyan/30 bg-background/50 backdrop-blur-sm 
+                transition-all duration-300 hover:border-neon.cyan/50 hover:shadow-lg hover:-translate-y-1">
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 
                   bg-gradient-to-br ${achievement.color}`} />
                 
-                {/* Content */}
-                <div className="relative p-6">
+                <div className="p-6">
                   <div className="flex items-start gap-4">
-                    {/* Icon Container */}
-                    <motion.div
-                      whileHover={{ rotate: 360, scale: 1.1 }}
-                      transition={{ duration: 0.7, ease: "easeOut" }}
-                      className={`relative flex-none p-3 rounded-xl 
-                        bg-gradient-to-br ${achievement.color} 
-                        bg-opacity-10 border border-neon.cyan/20
-                        transition-all duration-500 ease-out shadow-lg
-                        group-hover:shadow-2xl group-hover:border-neon.cyan/50
-                        [box-shadow:0_0_20px_rgba(0,245,255,0.2)]
-                        group-hover:[box-shadow:0_0_30px_rgba(0,245,255,0.3)]`}
-                    >
+                    <div className={`p-4 rounded-xl bg-gradient-to-br from-neon.cyan/10 to-neon.purple/10 
+                      border border-neon.purple/20 shadow-lg shadow-neon.cyan/10
+                      group-hover:shadow-neon.cyan/30 transition-all duration-300`}>
                       {React.createElement(achievement.icon, {
-                        className: `w-6 h-6 text-neon.cyan relative z-10
-                          group-hover:text-white transition-colors duration-300`
+                        className: "w-8 h-8 text-neon.cyan"
                       })}
-                      {/* Glow Effect */}
-                      <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 
-                        bg-gradient-to-br ${achievement.color} blur-xl`} />
-                    </motion.div>
+                    </div>
 
                     <div className="flex-1">
-                      {/* Title and Year */}
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className={`text-xl font-future bg-clip-text text-transparent 
-                          bg-gradient-to-r ${achievement.color} group-hover:text-white
-                          transition-colors duration-300 [text-shadow:0_0_20px_rgba(0,245,255,0.3)]`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className={`font-future text-xl bg-clip-text text-transparent bg-gradient-to-r ${achievement.color}`}>
                           {achievement.title}
                         </h3>
-                        <span className={`text-sm px-3 py-1 rounded-full 
-                          bg-gradient-to-r ${achievement.color} 
-                          text-white font-future shadow-lg group-hover:shadow-xl 
-                          transition-all duration-500 group-hover:scale-105
-                          [box-shadow:0_0_15px_rgba(0,245,255,0.2)]
-                          group-hover:[box-shadow:0_0_25px_rgba(0,245,255,0.3)]`}
-                        >
-                          {achievement.year}
+                        <span className="font-tech text-sm text-neon.cyan/60">
+                          {achievement.date}
                         </span>
                       </div>
-
-                      {/* Description */}
-                      <p className="font-cyber text-sm text-neon.cyan/60 group-hover:text-neon.cyan/90 
-                        transition-colors duration-500 mb-4">
+                      <p className="font-cyber text-sm text-neon.cyan/80 mb-4">
                         {achievement.description}
                       </p>
-
-                      {/* Stats */}
-                      <div className="flex items-center gap-2 text-sm font-future">
-                        <Sparkles className="w-4 h-4 text-neon.cyan group-hover:text-white 
-                          transition-colors duration-300" />
-                        <span className={`bg-clip-text text-transparent bg-gradient-to-r ${achievement.color}
-                          group-hover:text-white transition-colors duration-300`}>
+                      
+                      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full 
+                        bg-neon.purple/10 border border-neon.purple/30
+                        group-hover:border-neon.cyan/30 transition-all duration-300">
+                        <Trophy className="w-4 h-4 text-neon.cyan" />
+                        <span className="font-future text-sm text-neon.cyan">
                           {achievement.stats}
                         </span>
                       </div>
                     </div>
                   </div>
-
-                  {/* Bottom Gradient Line */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-[2px] 
-                    bg-gradient-to-r ${achievement.color}
-                    opacity-0 group-hover:opacity-100 transition-all duration-500
-                    [box-shadow:0_0_10px_rgba(0,245,255,0.3)]`} 
-                  />
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Other Achievements */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {achievements.filter(a => !a.featured).map((achievement, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="group relative"
+            >
+              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-background/50 backdrop-blur-sm 
+                transition-all duration-300 hover:border-neon.cyan/50 hover:shadow-lg hover:-translate-y-1">
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 
+                  bg-gradient-to-br ${achievement.color}`} />
+                
+                <div className="p-4">
+                  <div className="flex items-start gap-3">
+                    <div className={`p-2.5 rounded-lg bg-gradient-to-br from-neon.cyan/10 to-neon.purple/10 
+                      border border-neon.purple/20 shadow-lg shadow-neon.cyan/10
+                      group-hover:shadow-neon.cyan/30 transition-all duration-300`}>
+                      {React.createElement(achievement.icon, {
+                        className: "w-5 h-5 text-neon.cyan"
+                      })}
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className={`font-future text-base bg-clip-text text-transparent bg-gradient-to-r ${achievement.color}`}>
+                          {achievement.title}
+                        </h3>
+                        <span className="font-tech text-xs text-neon.cyan/60">
+                          {achievement.date}
+                        </span>
+                      </div>
+                      <p className="font-cyber text-xs text-neon.cyan/80 mb-3 line-clamp-2">
+                        {achievement.description}
+                      </p>
+                      
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full 
+                        bg-neon.purple/10 border border-neon.purple/30
+                        group-hover:border-neon.cyan/30 transition-all duration-300">
+                        <Sparkles className="w-3.5 h-3.5 text-neon.cyan" />
+                        <span className="font-tech text-xs text-neon.cyan">
+                          {achievement.stats}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Achievement Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-6"
+        >
+          {[
+            { icon: Trophy, label: "Hackathons Won", value: "2" },
+            { icon: Heart, label: "Businesses Helped", value: "2" },
+            { icon: Globe, label: "Open Source Contributions", value: "10+" }
+          ].map((stat, index) => (
+            <div key={index} className="relative group">
+              <div className="flex flex-col items-center p-4 rounded-xl border border-white/10 
+                bg-background/50 backdrop-blur-sm hover:border-neon.cyan/30 transition-all duration-300">
+                <div className="p-3 rounded-full bg-neon.purple/10 mb-3">
+                  {React.createElement(stat.icon, {
+                    className: "w-6 h-6 text-neon.cyan"
+                  })}
+                </div>
+                <span className="font-future text-2xl text-neon.cyan mb-1">{stat.value}</span>
+                <span className="font-tech text-sm text-neon.cyan/60">{stat.label}</span>
+              </div>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   )

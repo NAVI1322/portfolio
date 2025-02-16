@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber'
 import { ErrorBoundary } from 'react-error-boundary'
 import { motion } from 'framer-motion'
 import { Linkedin, Github, Music2Icon } from 'lucide-react'
+import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
 // Add background music URL - replace with your actual music file path
 const BACKGROUND_MUSIC_URL = '/sounds/background-music.mp3'
@@ -12,36 +13,51 @@ const MODEL_PATH = '/models/model (1).glb'
 function Scene({ isAnimating }) {
   return (
     <>
-      {/* Ambient light for general illumination */}
+      {/* Ambient light for general illumination - increased intensity */}
       <ambientLight intensity={0.8} />
       
-      {/* Main directional light for shadows */}
+      {/* Main directional light for shadows - increased intensity */}
       <directionalLight 
-        position={[10, 10, 10]} 
+        position={[5, 5, 5]} 
         intensity={1.5} 
         castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-far={50}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-far={20}
         shadow-camera-left={-10}
         shadow-camera-right={10}
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
+        shadow-bias={-0.001}
       />
       
-      {/* Back light for better depth */}
+      {/* Back light for better depth - increased intensity */}
       <directionalLight
-        position={[-5, 5, -5]}
+        position={[-3, 3, -3]}
         intensity={0.5}
       />
 
-      {/* Ground plane for shadow casting */}
+      {/* Additional rim light for better definition */}
+      <directionalLight
+        position={[0, 3, -5]}
+        intensity={0.4}
+        color="#00F5FF"
+      />
+
+      {/* Fill light for shadows */}
+      <directionalLight
+        position={[-5, 0, 0]}
+        intensity={0.3}
+        color="#FF71CE"
+      />
+
+      {/* Ground plane for shadow casting - adjusted opacity */}
       <mesh 
         rotation={[-Math.PI / 2, 0, 0]} 
-        position={[0, -0.5, 0]} 
+        position={[0, -1.2, 0]} 
         receiveShadow
       >
         <planeGeometry args={[100, 100]} />
-        <shadowMaterial transparent opacity={0.4} />
+        <shadowMaterial transparent opacity={0.2} />
       </mesh>
 
       <Model isAnimating={isAnimating} />
@@ -49,7 +65,7 @@ function Scene({ isAnimating }) {
   )
 }
 
-const Model = React.memo(({ scale = 1.3, position = [0, -0.2, 0], isAnimating = false }) => {
+const Model = React.memo(({ scale = 1.9, position = [0, -0.9, 0], isAnimating = false }) => {
   const group = useRef()
   const { scene, animations } = useGLTF(MODEL_PATH)
   const { actions, mixer } = useAnimations(animations, group)
@@ -126,7 +142,7 @@ export function ModelCanvas() {
             dpr={[1, 2]}
             camera={{ 
               fov: 45, 
-              position: [0, 2, 6],
+              position: [0, 0, 8],
               near: 0.1,
               far: 100
             }}
@@ -142,9 +158,10 @@ export function ModelCanvas() {
             <PresentationControls
               speed={1.5}
               global
-              zoom={0.8}
+              zoom={0.7}
               polar={[-0.1, Math.PI / 4]}
               azimuth={[-Math.PI / 4, Math.PI / 4]}
+              config={{ mass: 2, tension: 400 }}
             >
               <Stage 
                 environment={null} 
@@ -152,6 +169,7 @@ export function ModelCanvas() {
                 adjustCamera={false}
                 shadows="contact"
                 preset="rembrandt"
+                center
               >
                 <Scene isAnimating={isAnimating} />
               </Stage>
@@ -168,38 +186,59 @@ export function ModelCanvas() {
 
       {/* Controls */}
       <div className="absolute bottom-4 right-4 flex flex-col gap-4">
-        <motion.a
-          href="https://www.github.com/navi322"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-3 rounded-full border backdrop-blur-sm border-[#00F5FF]/20 bg-black/20 text-[#00F5FF] hover:border-[#00F5FF]/50"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Github className="w-5 h-5" />
-        </motion.a>
-        <motion.a
-          href="https://www.linkedin.com/in/navneet7"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-3 rounded-full border backdrop-blur-sm border-[#00F5FF]/20 bg-black/20 text-[#00F5FF] hover:border-[#00F5FF]/50"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Linkedin className="w-5 h-5" />
-        </motion.a>
-        <motion.button
-          onClick={toggleMusic}
-          className={`p-3 rounded-full border backdrop-blur-sm
-            ${isMusicPlaying 
-              ? 'border-[#FF71CE]/50 bg-black/40 text-[#FF71CE]' 
-              : 'border-[#00F5FF]/20 bg-black/20 text-[#00F5FF]'
-            }`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Music2Icon className="w-5 h-5" />
-        </motion.button>
+        <TooltipRoot>
+          <TooltipTrigger asChild>
+            <motion.a
+              href="https://www.github.com/navi322"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full border backdrop-blur-sm border-[#00F5FF]/20 bg-black/20 text-[#00F5FF] hover:border-[#00F5FF]/50"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Github className="w-5 h-5" />
+            </motion.a>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="font-tech text-sm">Check out my GitHub projects</p>
+          </TooltipContent>
+        </TooltipRoot>
+        <TooltipRoot>
+          <TooltipTrigger asChild>
+            <motion.a
+              href="https://www.linkedin.com/in/navneet7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full border backdrop-blur-sm border-[#00F5FF]/20 bg-black/20 text-[#00F5FF] hover:border-[#00F5FF]/50"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Linkedin className="w-5 h-5" />
+            </motion.a>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="font-tech text-sm">Connect with me on LinkedIn</p>
+          </TooltipContent>
+        </TooltipRoot>
+        <TooltipRoot>
+          <TooltipTrigger asChild>
+            <motion.button
+              onClick={toggleMusic}
+              className={`p-3 rounded-full border backdrop-blur-sm
+                ${isMusicPlaying 
+                  ? 'border-[#FF71CE]/50 bg-black/40 text-[#FF71CE]' 
+                  : 'border-[#00F5FF]/20 bg-black/20 text-[#00F5FF]'
+                }`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Music2Icon className="w-5 h-5" />
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="font-tech text-sm">{isMusicPlaying ? 'Stop the dance' : 'Make me dance!'}</p>
+          </TooltipContent>
+        </TooltipRoot>
       </div>
     </div>
   )

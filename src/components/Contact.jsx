@@ -155,7 +155,7 @@ ${formData.message}
                     value={formData.name}
                     onChange={handleChange}
                     className="font-cyber pl-10 bg-white/5 border-white/10 focus:border-neon.cyan/50 placeholder:text-white/20"
-                    placeholder="John Doe"
+                    placeholder="Navneet Sharma"
                     required
                   />
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neon.cyan/60" />

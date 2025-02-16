@@ -47,7 +47,7 @@ export default function LoadingScreen() {
         {/* Text */}
         <div className="text-center">
           <motion.h2
-            className="font-future text-2xl text-white/90 mb-2"
+            className="font-future text-4xl text-white/90 mb-2"
             animate={{
               opacity: [0.5, 1, 0.5]
             }}
@@ -57,10 +57,10 @@ export default function LoadingScreen() {
               ease: "easeInOut"
             }}
           >
-            Loading Experience
+            Hi, I'm Navneet
           </motion.h2>
-          <p className="font-tech text-sm text-white/60">
-            🚧 Website Under Construction
+          <p className="font-tech text-xl text-white/60">
+            🚧 Welcome to my portfolio
           </p>
         </div>
       </div>

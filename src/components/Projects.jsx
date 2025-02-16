@@ -1,68 +1,86 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Github, ExternalLink, Code2, Sparkles, ArrowUpRight, ChevronRight, ChevronLeft } from 'lucide-react'
+import { Github, ArrowUpRight, ChevronRight, ChevronLeft } from 'lucide-react'
 import { AnimatedBackground } from './magicui/animated-background'
 
 const projects = [
   {
-    title: 'Modern E-commerce Platform',
-    description: 'A full-stack e-commerce solution with real-time inventory, secure payments, and admin dashboard.',
-    image: '/projects/ecommerce.jpg',
-    technologies: ['Next.js', 'Stripe', 'Prisma', 'PostgreSQL'],
-    github: 'https://github.com/yourusername/ecommerce',
-    live: 'https://ecommerce-demo.com',
+    title: 'Task Forge',
+    description: 'A smart task management application powered by AI to help prioritize and organize tasks efficiently and AI generated TODO wiht resources with daily and weekly updates and also chat bot.',
+    image: '/photos/AI_todo.webp',
+    technologies: ['AI-Agent','React', 'OpenAI API', 'Node.js', 'MongoDB','Express','shadcn','tailwind','javascript','nodemailer','stripe'],
+    github: 'https://github.com/NAVI1322/AI_todo.git',
+    live: 'https://taskforge.navixdev.com',
     color: 'from-neon.cyan via-neon.purple to-neon.pink',
     shadowColor: 'shadow-neon.cyan/20',
     featured: true
   },
   {
-    title: 'Portfolio Website',
-    description: 'A modern portfolio website with 3D animations, interactive UI, and responsive design.',
-    image: '/projects/portfolio.jpg',
-    technologies: ['React', 'Three.js', 'Framer Motion', 'TailwindCSS'],
-    github: 'https://github.com/yourusername/portfolio',
-    live: 'https://portfolio-demo.com',
+    title: 'Tenki Weather App',
+    description: 'Real-time weather application with beautiful anime style visualizations and accurate forecasts.',
+    image: '/photos/Tenki.webp',
+    technologies: ['React', 'Weather API', 'TailwindCSS', 'Framer Motion','javascript','framer-motion'],
+    github: 'https://github.com/NAVI1322/Tenki_weather_app_updated.git',
+    live: 'https://tenki.navixdev.com',
     color: 'from-neon.purple via-neon.pink to-neon.cyan',
     shadowColor: 'shadow-neon.purple/20',
     featured: true
   },
   {
-    title: 'AI Task Manager',
-    description: 'Smart task management app with AI-powered task prioritization and scheduling.',
-    image: '/projects/taskmanager.jpg',
-    technologies: ['React', 'OpenAI API', 'Node.js', 'MongoDB'],
-    github: 'https://github.com/yourusername/ai-tasks',
-    live: 'https://ai-tasks-demo.com',
+    title: 'FastFreeze Hvac Services',
+    description: 'Modern Hvac platform focusing on Hvac services.',
+    image: '/photos/FastFreeze.webp',
+    technologies: ["react","tailwind","shadcn","javascript","framer-motion"],
+    github: 'https://github.com/NAVI1322/FFRS.git',
+    live: 'https://fastfreezehvac.ca',
     color: 'from-neon.purple via-neon.pink to-neon.cyan',
-    shadowColor: 'shadow-neon.purple/20'
+    shadowColor: 'shadow-neon.purple/20',
+    featured: true
   },
   {
-    title: 'Real-time Chat App',
-    description: 'Feature-rich chat application with video calls, file sharing, and end-to-end encryption.',
-    image: '/projects/chatapp.jpg',
-    technologies: ['React', 'WebRTC', 'Socket.io', 'Firebase'],
-    github: 'https://github.com/yourusername/chat-app',
-    live: 'https://chat-app-demo.com',
+    title: 'AllFitHub Fitness Platform',
+    description: 'An inclusive fitness platform offering personalized workout consultations, custom meal planning, and expert-crafted training programs. Features AI-powered progress tracking and direct communication with certified trainers.',
+    image: '/photos/AllFithub.webp',
+    technologies: ['React', 'Node.js','prisma','postgres','shadcn','tailwind','javascript','OpenAI','Ninja'],
+    github: 'https://github.com/NAVI1322/AllFitHub.git',
+    live: 'https://afh.navixdev.com/',
     color: 'from-neon.pink via-neon.cyan to-neon.purple',
     shadowColor: 'shadow-neon.pink/20'
   },
   {
-    title: 'Real-time Chat App',
-    description: 'Feature-rich chat application with video calls, file sharing, and end-to-end encryption.',
-    image: '/projects/chatapp.jpg',
-    technologies: ['React', 'WebRTC', 'Socket.io', 'Firebase'],
-    github: 'https://github.com/yourusername/chat-app',
-    live: 'https://chat-app-demo.com',
-    color: 'from-neon.pink via-neon.cyan to-neon.purple',
-    shadowColor: 'shadow-neon.pink/20'
+    title: 'URL Shortener Linky',
+    description: 'Fast and reliable URL shortening service with analytics and custom alias support.',
+    image: '/photos/url_shortner.webp',
+    technologies: ['React', 'Express','Nodejs','Prisma','postgres','shadcn','tailwind','javascript'],
+    github: 'https://github.com/NAVI1322/url_shortner.git',
+    live: 'https://linky.navixdev.com',
+    color: 'from-neon.cyan via-neon.purple to-neon.pink',
+    shadowColor: 'shadow-neon.cyan/20'
   }
 ]
 
 export default function Projects() {
-  const [hoveredIndex, setHoveredIndex] = useState(null)
   const [activeFeatureIndex, setActiveFeatureIndex] = useState(0)
-  const featuredProjects = projects.filter(p => p.featured)
-  const regularProjects = projects.filter(p => !p.featured)
+  
+  // Initialize with first 2 projects on left and last 3 on right
+  const [leftProjects] = useState(projects.slice(0, 2)) // Changed to 2 projects
+  const [rightProjects] = useState(projects.slice(2)) // Changed to get remaining 3 projects
+
+  // Auto-slide for left side projects
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeatureIndex((prev) => (prev + 1) % leftProjects.length)
+    }, 5000) // Change slide every 5 seconds
+
+    return () => clearInterval(interval)
+  }, [leftProjects.length])
+
+  // Function to handle project navigation
+  const handleProjectNavigation = (newIndex) => {
+    if (newIndex >= 0 && newIndex < leftProjects.length) {
+      setActiveFeatureIndex(newIndex)
+    }
+  }
 
   return (
     <section id="projects" className="py-20 relative overflow-hidden">
@@ -121,126 +139,142 @@ export default function Projects() {
 
         {/* Enhanced Project Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Featured Projects Card (Left Side) */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative lg:row-span-2"
-          >
+          {/* Left Side Featured Projects */}
+          <motion.div className="relative lg:row-span-2">
             <div className="h-full relative overflow-hidden rounded-xl border border-white/10 bg-background/50 backdrop-blur-sm 
               transition-all duration-300 hover:border-neon.cyan/50 hover:shadow-lg">
               
-              {/* Featured Project Content */}
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeFeatureIndex}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative"
-                >
-                  {/* Image Container */}
-                  <div className="relative h-72 overflow-hidden">
-                    <div className="absolute inset-0 bg-black/50" />
-                    <img
-                      src={featuredProjects[activeFeatureIndex].image}
-                      alt={featuredProjects[activeFeatureIndex].title}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-8">
-                    {/* Title with Animated Underline */}
-                    <div className="relative inline-block mb-4">
-                      <h3 className={`font-future text-2xl bg-clip-text text-transparent bg-gradient-to-r ${featuredProjects[activeFeatureIndex].color}`}>
-                        {featuredProjects[activeFeatureIndex].title}
-                      </h3>
-                      <div className={`absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r ${featuredProjects[activeFeatureIndex].color}`} />
+                {leftProjects[activeFeatureIndex] && (
+                  <motion.div
+                    key={activeFeatureIndex}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative flex flex-col h-full"
+                  >
+                    {/* Image Container */}
+                    <div 
+                      className="relative aspect-video w-full overflow-hidden rounded-t-xl project-image-container cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Add any image click handling here if needed
+                      }}
+                    >
+                      <img
+                        src={leftProjects[activeFeatureIndex].image}
+                        alt={leftProjects[activeFeatureIndex].title}
+                        className="absolute inset-0 w-full h-full object-cover object-center transform-gpu transition-all duration-500 hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60" />
                     </div>
 
-                    {/* Description */}
-                    <p className="font-cyber text-base text-neon.cyan/80 mb-6">
-                      {featuredProjects[activeFeatureIndex].description}
-                    </p>
-
-                    {/* Technologies */}
-                    <div className="flex flex-wrap gap-3 mb-8">
-                      {featuredProjects[activeFeatureIndex].technologies.map((tech, i) => (
-                        <motion.span
-                          key={i}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: i * 0.1 }}
-                          className={`px-4 py-1.5 rounded-full text-sm font-future
-                            bg-gradient-to-r ${featuredProjects[activeFeatureIndex].color} bg-opacity-10
-                            border border-white/10 hover:border-neon.cyan/30
-                            text-white shadow-lg ${featuredProjects[activeFeatureIndex].shadowColor}
-                            transition-all duration-300`}
-                        >
-                          {tech}
-                        </motion.span>
-                      ))}
-                    </div>
-
-                    {/* Links */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-6">
-                        <motion.a
-                          href={featuredProjects[activeFeatureIndex].github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-base font-future text-neon.purple hover:text-neon.cyan transition-colors"
-                          whileHover={{ x: 5 }}
-                        >
-                          <Github className="w-5 h-5" />
-                          View Code
-                        </motion.a>
-                        <motion.a
-                          href={featuredProjects[activeFeatureIndex].live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-base font-future text-neon.cyan hover:text-neon.purple transition-colors"
-                          whileHover={{ x: 5 }}
-                        >
-                          <ArrowUpRight className="w-5 h-5" />
-                          Live Demo
-                        </motion.a>
+                    {/* Content */}
+                    <div className="p-8" onClick={e => e.stopPropagation()}>
+                      {/* Title with Animated Underline */}
+                      <div className="relative inline-block mb-4">
+                        <h3 className={`font-future text-2xl bg-clip-text text-transparent bg-gradient-to-r ${leftProjects[activeFeatureIndex].color}`}>
+                          {leftProjects[activeFeatureIndex].title}
+                        </h3>
+                        <div className={`absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r ${leftProjects[activeFeatureIndex].color}`} />
                       </div>
 
-                      {/* Navigation Buttons */}
-                      <div className="flex gap-2">
-                        <motion.button
-                          onClick={() => setActiveFeatureIndex(prev => (prev === 0 ? featuredProjects.length - 1 : prev - 1))}
-                          className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <ChevronLeft className="w-5 h-5 text-neon.cyan" />
-                        </motion.button>
-                        <motion.button
-                          onClick={() => setActiveFeatureIndex(prev => (prev === featuredProjects.length - 1 ? 0 : prev + 1))}
-                          className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <ChevronRight className="w-5 h-5 text-neon.cyan" />
-                        </motion.button>
+                      {/* Description */}
+                      <p className="font-cyber text-base text-neon.cyan/80 mb-6">
+                        {leftProjects[activeFeatureIndex].description}
+                      </p>
+
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-3 mb-8">
+                        {leftProjects[activeFeatureIndex].technologies.map((tech, i) => (
+                          <motion.span
+                            key={i}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.1 }}
+                            className={`px-4 py-1.5 rounded-full text-sm font-future
+                              bg-gradient-to-r ${leftProjects[activeFeatureIndex].color} bg-opacity-10
+                              border border-white/10 hover:border-neon.cyan/30
+                              text-white shadow-lg ${leftProjects[activeFeatureIndex].shadowColor}
+                              transition-all duration-300`}
+                          >
+                            {tech}
+                          </motion.span>
+                        ))}
+                      </div>
+
+                      {/* Links */}
+                      <div className="flex items-center justify-between relative z-10">
+                        <div className="flex gap-4 mt-2">
+                          <a
+                            href={leftProjects[activeFeatureIndex].github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              window.open(leftProjects[activeFeatureIndex].github, '_blank');
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-future text-neon.purple hover:text-neon.cyan bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                          >
+                            <Github className="w-4 h-4" />
+                            <span className="whitespace-nowrap">View Code</span>
+                          </a>
+                          <a
+                            href={leftProjects[activeFeatureIndex].live}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              window.open(leftProjects[activeFeatureIndex].live, '_blank');
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-future text-neon.cyan hover:text-neon.purple bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                          >
+                            <ArrowUpRight className="w-4 h-4" />
+                            <span className="whitespace-nowrap">Live Demo</span>
+                          </a>
+                        </div>
+
+                        {/* Navigation Buttons */}
+                        <div className="flex gap-2">
+                          <motion.button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleProjectNavigation(activeFeatureIndex - 1);
+                            }}
+                            className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <ChevronLeft className="w-5 h-5 text-neon.cyan" />
+                          </motion.button>
+                          <motion.button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleProjectNavigation(activeFeatureIndex + 1);
+                            }}
+                            className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <ChevronRight className="w-5 h-5 text-neon.cyan" />
+                          </motion.button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                )}
               </AnimatePresence>
 
-              {/* Progress Indicators */}
+              {/* Navigation Buttons */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {featuredProjects.map((_, index) => (
+                {leftProjects.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setActiveFeatureIndex(index)}
+                    onClick={() => handleProjectNavigation(index)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       index === activeFeatureIndex 
                         ? 'bg-neon.cyan w-6' 
@@ -252,17 +286,15 @@ export default function Projects() {
             </div>
           </motion.div>
 
-          {/* Regular Projects (Right Side) */}
+          {/* Right Side Projects */}
           <div className="grid grid-cols-1 gap-6">
-            {regularProjects.map((project, index) => (
+            {rightProjects.map((project, index) => (
               <motion.div
-                key={index}
+                key={project.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                onHoverStart={() => setHoveredIndex(index)}
-                onHoverEnd={() => setHoveredIndex(null)}
                 className="group relative"
               >
                 {/* Project Card */}
@@ -273,50 +305,73 @@ export default function Projects() {
                     bg-gradient-to-br ${project.color}`} />
                   
                   {/* Content */}
-                  <div className="flex items-start gap-4 p-6">
+                  <div className="flex flex-col sm:flex-row items-start gap-4 p-4">
                     {/* Image Thumbnail */}
-                    <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                    <div className="relative aspect-video w-full sm:w-72 flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="absolute inset-0 w-full h-full object-cover object-center transform-gpu transition-all duration-500 group-hover:scale-105"
+                        loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent to-background/50" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/50" />
                     </div>
 
-                    <div className="flex-1">
-                      {/* Title */}
-                      <h3 className={`font-future text-lg bg-clip-text text-transparent bg-gradient-to-r ${project.color} mb-2`}>
+                    {/* Project Info */}
+                    <div className="flex-1 min-w-0 w-full">
+                      <h3 className={`font-future text-base bg-clip-text text-transparent bg-gradient-to-r ${project.color} mb-2`}>
                         {project.title}
                       </h3>
 
-                      {/* Description */}
-                      <p className="font-cyber text-sm text-neon.cyan/80 mb-4">
+                      <p className="font-cyber text-xs text-neon.cyan/80 mb-3 line-clamp-2">
                         {project.description}
                       </p>
 
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {project.technologies.map((tech, i) => (
+                          <span
+                            key={i}
+                            className={`px-2 py-0.5 rounded-full text-xs font-future
+                              bg-gradient-to-r ${project.color} bg-opacity-10
+                              border border-white/10 hover:border-neon.cyan/30
+                              text-white/80 shadow-lg ${project.shadowColor}
+                              transition-all duration-300`}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+
                       {/* Links */}
-                      <div className="flex gap-4">
-                        <motion.a
+                      <div className="flex gap-4 mt-2">
+                        <a
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-sm font-future text-neon.purple hover:text-neon.cyan transition-colors"
-                          whileHover={{ x: 5 }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.github, '_blank');
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-future text-neon.purple hover:text-neon.cyan bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer z-10"
                         >
                           <Github className="w-4 h-4" />
-                          Code
-                        </motion.a>
-                        <motion.a
+                          <span className="whitespace-nowrap">View Code</span>
+                        </a>
+                        <a
                           href={project.live}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-sm font-future text-neon.cyan hover:text-neon.purple transition-colors"
-                          whileHover={{ x: 5 }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.live, '_blank');
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-future text-neon.cyan hover:text-neon.purple bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer z-10"
                         >
                           <ArrowUpRight className="w-4 h-4" />
-                          Demo
-                        </motion.a>
+                          <span className="whitespace-nowrap">Live Demo</span>
+                        </a>
                       </div>
                     </div>
                   </div>
