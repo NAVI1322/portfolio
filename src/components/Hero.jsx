@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react'
 import { Button } from '@/components/ui/button'
 import { Code2, GraduationCap, ArrowRight } from 'lucide-react'
 import LoadingSpinner from './LoadingSpinner'
+import ResponsiveModel from './ResponsiveModel'
 
 // Lazy load heavy components
 const SparklesCore = lazy(() => import('./magicui/sparkles').then(mod => ({ default: mod.SparklesCore })))
@@ -226,9 +227,7 @@ export default function Hero() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-neon.purple/10 to-neon.cyan/10 rounded-3xl blur-3xl opacity-30" />
             <div className="relative h-full w-full">
-              <Suspense fallback={<LoadingSpinner />}>
-                <ModelCanvas />
-              </Suspense>
+              <ResponsiveModel />
             </div>
           </motion.div>
         </div>
