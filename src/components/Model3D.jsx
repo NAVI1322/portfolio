@@ -6,17 +6,12 @@ import { motion } from 'framer-motion'
 import { Linkedin, Github, Music2Icon } from 'lucide-react'
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
-// Add background music URL - replace with your actual music file path
-const BACKGROUND_MUSIC_URL = '/sounds/background-music.mp3'
 const MODEL_PATH = '/models/model (1).glb'
 
 function Scene({ isAnimating }) {
   return (
     <>
-      {/* Ambient light for general illumination - increased intensity */}
       <ambientLight intensity={0.8} />
-      
-      {/* Main directional light for shadows - increased intensity */}
       <directionalLight 
         position={[5, 5, 5]} 
         intensity={1.5} 
@@ -29,28 +24,20 @@ function Scene({ isAnimating }) {
         shadow-camera-bottom={-10}
         shadow-bias={-0.001}
       />
-      
-      {/* Back light for better depth - increased intensity */}
       <directionalLight
         position={[-3, 3, -3]}
         intensity={0.5}
       />
-
-      {/* Additional rim light for better definition */}
       <directionalLight
         position={[0, 3, -5]}
         intensity={0.4}
         color="#00F5FF"
       />
-
-      {/* Fill light for shadows */}
       <directionalLight
         position={[-5, 0, 0]}
         intensity={0.3}
         color="#FF71CE"
       />
-
-      {/* Ground plane for shadow casting - adjusted opacity */}
       <mesh 
         rotation={[-Math.PI / 2, 0, 0]} 
         position={[0, -1.2, 0]} 
@@ -59,7 +46,6 @@ function Scene({ isAnimating }) {
         <planeGeometry args={[100, 100]} />
         <shadowMaterial transparent opacity={0.2} />
       </mesh>
-
       <Model isAnimating={isAnimating} />
     </>
   )
@@ -71,7 +57,6 @@ const Model = React.memo(({ scale = 1.9, position = [0, -0.9, 0], isAnimating = 
   const { actions, mixer } = useAnimations(animations, group)
 
   useEffect(() => {
-    // Enable shadow casting for all meshes in the model
     scene.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = true
@@ -102,35 +87,9 @@ Model.displayName = 'Model'
 
 export function ModelCanvas() {
   const [isAnimating, setIsAnimating] = useState(false)
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
-  const audioRef = useRef(null)
-
-  useEffect(() => {
-    audioRef.current = new Audio(BACKGROUND_MUSIC_URL)
-    audioRef.current.loop = true
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current = null
-      }
-    }
-  }, [])
-
-  const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isMusicPlaying) {
-        audioRef.current.pause()
-      } else {
-        audioRef.current.play()
-      }
-      setIsMusicPlaying(!isMusicPlaying)
-    }
-    setIsAnimating(!isAnimating)
-  }
 
   return (
     <div className="w-full h-[600px] relative hidden lg:block">
-      {/* Background with gradient and grid pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-neon.purple/20 to-neon.cyan/20">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.05)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
@@ -184,7 +143,6 @@ export function ModelCanvas() {
         </Suspense>
       </ErrorBoundary>
 
-      {/* Controls */}
       <div className="absolute bottom-4 right-4 flex flex-col gap-4">
         <TooltipRoot>
           <TooltipTrigger asChild>
@@ -223,9 +181,9 @@ export function ModelCanvas() {
         <TooltipRoot>
           <TooltipTrigger asChild>
             <motion.button
-              onClick={toggleMusic}
+              onClick={() => setIsAnimating(!isAnimating)}
               className={`p-3 rounded-full border backdrop-blur-sm
-                ${isMusicPlaying 
+                ${isAnimating 
                   ? 'border-[#FF71CE]/50 bg-black/40 text-[#FF71CE]' 
                   : 'border-[#00F5FF]/20 bg-black/20 text-[#00F5FF]'
                 }`}
@@ -236,7 +194,7 @@ export function ModelCanvas() {
             </motion.button>
           </TooltipTrigger>
           <TooltipContent>
-            <p className="font-tech text-sm">{isMusicPlaying ? 'Stop the dance' : 'Make me dance!'}</p>
+            <p className="font-tech text-sm">{isAnimating ? 'Stop dancing' : 'Make me dance!'}</p>
           </TooltipContent>
         </TooltipRoot>
       </div>
