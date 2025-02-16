@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { motion } from 'framer-motion'
 import { Linkedin, Github, Music2Icon } from 'lucide-react'
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import dynamic from 'next/dynamic'
 
 const MODEL_PATH = '/models/model (1).glb'
 
@@ -84,6 +85,14 @@ const Model = React.memo(({ scale = 1.9, position = [0, -0.9, 0], isAnimating = 
 })
 
 Model.displayName = 'Model'
+
+const Model3D = dynamic(
+  () => import('./Model3D').then(mod => mod.Model3D),
+  { 
+    ssr: false,
+    loading: () => <div className="aspect-square bg-gradient-to-r from-neon.purple/20 to-neon.cyan/20" />
+  }
+)
 
 export function ModelCanvas() {
   const [isAnimating, setIsAnimating] = useState(false)

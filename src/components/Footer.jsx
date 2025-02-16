@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { Github, Linkedin, Mail, Code2, Sparkles,X } from 'lucide-react'
-import React from 'react'
+import { Github, Linkedin, Mail ,X } from 'lucide-react'
+import React, { useEffect } from 'react'
 
 const socialLinks = [
   {
@@ -30,6 +30,20 @@ const socialLinks = [
 ]
 
 export default function Footer() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        // Trigger animation
+      }
+    });
+  }, { threshold: 0.1 });
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach(el => observer.observe(el));
+    return () => elements.forEach(el => observer.unobserve(el));
+  }, []);
+
   return (
     <footer className="py-12 relative overflow-hidden">
       {/* Background decoration */}
