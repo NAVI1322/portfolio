@@ -8,7 +8,6 @@ import Hero from '@/components/Hero'
 import LoadingScreen from '@/components/LoadingScreen'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import AnimatedCursor from "react-animated-cursor"
-import { useGLTF } from '@react-three/drei'
 
 // Lazy load non-critical components
 const Skills = lazy(() => import('@/components/Skills'))
@@ -19,41 +18,20 @@ const Certifications = lazy(() => import('@/components/Certifications'))
 const Contact = lazy(() => import('@/components/Contact'))
 const Footer = lazy(() => import('@/components/Footer'))
 
-const MODEL_PATH = '/models/model (1).glb'
-
 export default function App() {
   const { scrollYProgress } = useScroll()
   const [isLoading, setIsLoading] = useState(true)
-  const [modelLoaded, setModelLoaded] = useState(false)
 
-  // Preload the 3D model
   useEffect(() => {
-    const loadModel = async () => {
-      try {
-        await useGLTF.preload(MODEL_PATH)
-        setModelLoaded(true)
-      } catch (error) {
-        console.error('Error preloading model:', error)
-        setModelLoaded(true) // Continue even if model fails to load
-      }
-    }
-
-    loadModel()
-
-    // Show loading screen for at least 2 seconds and until model is loaded
     const timer = setTimeout(() => {
-      if (modelLoaded) {
-        setIsLoading(false)
-      }
+      setIsLoading(false)
     }, 2000)
 
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [modelLoaded])
+    return () => clearTimeout(timer)
+  }, [])
 
   if (isLoading) {
-    return <LoadingScreen progress={modelLoaded ? 100 : 50} />
+    return <LoadingScreen />
   }
 
   return (
