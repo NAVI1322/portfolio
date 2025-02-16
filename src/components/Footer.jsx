@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Github, Twitter, Linkedin, Mail, Code2, Sparkles } from 'lucide-react'
+import { Github, Linkedin, Mail, Code2, Sparkles,X } from 'lucide-react'
 import React from 'react'
 
 const socialLinks = [
@@ -14,6 +14,12 @@ const socialLinks = [
     icon: Linkedin,
     href: 'https://www.linkedin.com/in/navneet7/',
     color: 'from-neon.purple to-neon.pink'
+  },
+  {
+    name: 'X',
+    icon: X,
+    href: 'https://x.com/navneet35442604?s=21',
+    color: 'from-neon.cyan to-neon.purple'
   },
   {
     name: 'Email',
