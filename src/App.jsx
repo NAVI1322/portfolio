@@ -7,6 +7,8 @@ import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import LoadingScreen from '@/components/LoadingScreen'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import AnimatedCursor from "react-animated-cursor"
+import { useGLTF } from '@react-three/drei'
 
 // Lazy load non-critical components
 const Skills = lazy(() => import('@/components/Skills'))
@@ -17,25 +19,78 @@ const Certifications = lazy(() => import('@/components/Certifications'))
 const Contact = lazy(() => import('@/components/Contact'))
 const Footer = lazy(() => import('@/components/Footer'))
 
+const MODEL_PATH = '/models/model (1).glb'
+
 export default function App() {
   const { scrollYProgress } = useScroll()
   const [isLoading, setIsLoading] = useState(true)
+  const [modelLoaded, setModelLoaded] = useState(false)
 
+  // Preload the 3D model
   useEffect(() => {
-    // Simulate loading time and resources loading
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000) // Show loading screen for 2 seconds
+    const loadModel = async () => {
+      try {
+        await useGLTF.preload(MODEL_PATH)
+        setModelLoaded(true)
+      } catch (error) {
+        console.error('Error preloading model:', error)
+        setModelLoaded(true) // Continue even if model fails to load
+      }
+    }
 
-    return () => clearTimeout(timer)
-  }, [])
+    loadModel()
+
+    // Show loading screen for at least 2 seconds and until model is loaded
+    const timer = setTimeout(() => {
+      if (modelLoaded) {
+        setIsLoading(false)
+      }
+    }, 2000)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [modelLoaded])
 
   if (isLoading) {
-    return <LoadingScreen />
+    return <LoadingScreen progress={modelLoaded ? 100 : 50} />
   }
 
   return (
     <TooltipProvider>
+      <AnimatedCursor 
+        className="hidden lg:block"
+        innerSize={8}
+        outerSize={8}
+        color='193, 11, 111'
+        outerAlpha={0.2}
+        innerScale={0.7}
+        outerScale={5}
+        clickables={[
+          'a',
+          'input[type="text"]',
+          'input[type="email"]',
+          'input[type="number"]',
+          'input[type="submit"]',
+          'input[type="image"]',
+          'label[for]',
+          'select',
+          'textarea',
+          'button',
+          '.link',
+          {
+            target: '.custom',
+            options: {
+              innerSize: 12,
+              outerSize: 12,
+              color: '255, 255, 255',
+              outerAlpha: 0.3,
+              innerScale: 0.7,
+              outerScale: 5
+            }
+          }
+        ]}
+      />
       <div className="min-h-screen w-full bg-background text-foreground antialiased transition-colors duration-300">
         {/* Progress bar */}
         <motion.div
