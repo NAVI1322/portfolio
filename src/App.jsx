@@ -21,13 +21,27 @@ const Footer = lazy(() => import('@/components/Footer'))
 export default function App() {
   const { scrollYProgress } = useScroll()
   const [isLoading, setIsLoading] = useState(true)
+  const [isLargeScreen, setIsLargeScreen] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 2000)
 
-    return () => clearTimeout(timer)
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024) // 1024px is the 'lg' breakpoint
+    }
+
+    // Initial check
+    checkScreenSize()
+
+    // Add resize listener
+    window.addEventListener('resize', checkScreenSize)
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', checkScreenSize)
+    }
   }, [])
 
   if (isLoading) {
@@ -36,40 +50,41 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <AnimatedCursor 
-        className="hidden lg:block"
-        innerSize={8}
-        outerSize={8}
-        color='193, 11, 111'
-        outerAlpha={0.2}
-        innerScale={0.7}
-        outerScale={5}
-        clickables={[
-          'a',
-          'input[type="text"]',
-          'input[type="email"]',
-          'input[type="number"]',
-          'input[type="submit"]',
-          'input[type="image"]',
-          'label[for]',
-          'select',
-          'textarea',
-          'button',
-          '.link',
-          {
-            target: '.custom',
-            options: {
-              innerSize: 12,
-              outerSize: 12,
-              color: '255, 255, 255',
-              outerAlpha: 0.3,
-              innerScale: 0.7,
-              outerScale: 5
+      {isLargeScreen && (
+        <AnimatedCursor 
+          innerSize={8}
+          outerSize={8}
+          color='193, 11, 111'
+          outerAlpha={0.2}
+          innerScale={0.7}
+          outerScale={5}
+          clickables={[
+            'a',
+            'input[type="text"]',
+            'input[type="email"]',
+            'input[type="number"]',
+            'input[type="submit"]',
+            'input[type="image"]',
+            'label[for]',
+            'select',
+            'textarea',
+            'button',
+            '.link',
+            {
+              target: '.custom',
+              options: {
+                innerSize: 12,
+                outerSize: 12,
+                color: '255, 255, 255',
+                outerAlpha: 0.3,
+                innerScale: 0.7,
+                outerScale: 5
+              }
             }
-          }
-        ]}
-      />
-      <div className="min-h-screen w-full bg-background text-foreground antialiased transition-colors duration-300">
+          ]}
+        />
+      )}
+      <div className={`min-h-screen w-full bg-background text-foreground antialiased transition-colors duration-300 ${!isLargeScreen ? 'cursor-default' : 'cursor-none'}`}>
         {/* Progress bar */}
         <motion.div
           className="fixed top-0 left-0 right-0 h-1 bg-primary z-50"
