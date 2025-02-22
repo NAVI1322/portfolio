@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Building2, ArrowUpRight, Sparkles, ChevronLeft, ChevronRight, Download, Laptop2, Rocket, Paintbrush } from 'lucide-react'
 import { SparklesCore } from './magicui/sparkles'
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { AnimatedBackground } from './magicui/animated-background'
 
 const experiences = [
@@ -90,6 +90,24 @@ export default function Experience() {
     setActiveIndex((prevIndex) => (prevIndex + newDirection + experiences.length) % experiences.length);
   };
 
+  const handleResumeDownload = useCallback(async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/resume.pdf');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'NaviXdev_Resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading resume:', error);
+    }
+  }, []);
+
   return (
     <section id="experience" className="py-20 relative overflow-hidden">
     
@@ -162,9 +180,8 @@ export default function Experience() {
           
 
           <motion.a
-            href="/resume.pdf"
-            download
-            className="inline-flex items-center gap-2 px-5 py-2 mt-4 font-cyber text-neon.cyan border border-neon.cyan/30 rounded-lg bg-background/30 backdrop-blur-sm hover:bg-background/50 hover:border-neon.cyan/60 transition-all duration-300"
+            onClick={handleResumeDownload}
+            className="inline-flex items-center gap-2 px-5 py-2 mt-4 font-cyber text-neon.cyan border border-neon.cyan/30 rounded-lg bg-background/30 backdrop-blur-sm hover:bg-background/50 hover:border-neon.cyan/60 transition-all duration-300 cursor-pointer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

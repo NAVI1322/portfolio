@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Github, ArrowUpRight, ChevronRight, ChevronLeft } from 'lucide-react'
 import { AnimatedBackground } from './magicui/animated-background'
+import React from 'react'
 
 const projects = [
   {
     title: 'Task Forge',
-    description: 'A smart task management application powered by AI to help prioritize and organize tasks efficiently and AI generated TODO wiht resources with daily and weekly updates and also chat bot.',
+    description: 'A smart task management application powered by AI to help prioritize and organize tasks efficiently and AI generated TODO with resources with daily and weekly updates and also chat bot.',
     image: '/photos/AI_todo.webp',
     technologies: ['AI-Agent','React', 'OpenAI API', 'Node.js', 'MongoDB','Express','shadcn','tailwind','javascript','nodemailer','stripe'],
     github: 'https://github.com/NAVI1322/AI_todo.git',
@@ -59,28 +60,209 @@ const projects = [
   }
 ]
 
+// Memoize the project cards to prevent unnecessary re-renders
+const ProjectCard = React.memo(({ project, index }) => {
+  return (
+    <motion.div
+      key={project.title}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="group relative"
+    >
+      {/* Project Card */}
+      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-background/50 backdrop-blur-sm 
+        transition-all duration-300 hover:border-neon.cyan/50 hover:shadow-lg hover:-translate-y-1">
+        {/* Gradient Overlay */}
+        <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 
+          bg-gradient-to-br ${project.color}`} />
+        
+        {/* Content */}
+        <div className="flex flex-col sm:flex-row items-start gap-4 p-4">
+          {/* Image Thumbnail */}
+          <div className="relative aspect-video w-full sm:w-72 flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
+            <img
+              src={project.image}
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover object-center transform-gpu transition-all duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/50" />
+          </div>
+
+          {/* Project Info */}
+          <div className="flex-1 min-w-0 w-full">
+            <h3 className={`font-future text-base bg-clip-text text-transparent bg-gradient-to-r ${project.color} mb-2`}>
+              {project.title}
+            </h3>
+
+            <p className="font-cyber text-xs text-neon.cyan/80 mb-3 line-clamp-2">
+              {project.description}
+            </p>
+
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {project.technologies.map((tech, i) => (
+                <span
+                  key={i}
+                  className={`px-2 py-0.5 rounded-full text-xs font-future
+                    bg-gradient-to-r ${project.color} bg-opacity-10
+                    border border-white/10 hover:border-neon.cyan/30
+                    text-white/80 shadow-lg ${project.shadowColor}
+                    transition-all duration-300`}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* Links */}
+            <div className="flex gap-4 mt-2">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-future text-neon.purple hover:text-neon.cyan bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer z-10"
+              >
+                <Github className="w-4 h-4" />
+                <span className="whitespace-nowrap">View Code</span>
+              </a>
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-future text-neon.cyan hover:text-neon.purple bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer z-10"
+              >
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="whitespace-nowrap">Live Demo</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+})
+
+ProjectCard.displayName = 'ProjectCard'
+
 export default function Projects() {
   const [activeFeatureIndex, setActiveFeatureIndex] = useState(0)
   
-  // Initialize with first 2 projects on left and last 3 on right
-  const [leftProjects] = useState(projects.slice(0, 2)) // Changed to 2 projects
-  const [rightProjects] = useState(projects.slice(2)) // Changed to get remaining 3 projects
+  // Memoize the project splits to prevent recalculation
+  const { leftProjects, rightProjects } = useMemo(() => ({
+    leftProjects: projects.slice(0, 2),
+    rightProjects: projects.slice(2)
+  }), [])
 
-  // Auto-slide for left side projects
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveFeatureIndex((prev) => (prev + 1) % leftProjects.length)
-    }, 5000) // Change slide every 5 seconds
-
-    return () => clearInterval(interval)
-  }, [leftProjects.length])
-
-  // Function to handle project navigation
-  const handleProjectNavigation = (newIndex) => {
+  // Memoize the navigation handler
+  const handleProjectNavigation = useCallback((newIndex) => {
     if (newIndex >= 0 && newIndex < leftProjects.length) {
       setActiveFeatureIndex(newIndex)
     }
-  }
+  }, [leftProjects.length])
+
+  // Memoize the featured project content
+  const FeaturedProject = useMemo(() => {
+    const project = leftProjects[activeFeatureIndex]
+    if (!project) return null
+
+    return (
+      <motion.div
+        key={activeFeatureIndex}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 20 }}
+        transition={{ duration: 0.3 }}
+        className="relative flex flex-col h-full"
+      >
+        {/* Image Container */}
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-xl project-image-container">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover object-center transform-gpu transition-all duration-500 hover:scale-105"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60" />
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-8">
+          <div className="relative inline-block mb-4">
+            <h3 className={`font-future text-xl sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r ${project.color}`}>
+              {project.title}
+            </h3>
+            <div className={`absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r ${project.color}`} />
+          </div>
+
+          <p className="font-cyber text-sm sm:text-base text-neon.cyan/80 mb-6">
+            {project.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
+            {project.technologies.map((tech, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-future
+                  bg-gradient-to-r ${project.color} bg-opacity-10
+                  border border-white/10 hover:border-neon.cyan/30
+                  text-white shadow-lg ${project.shadowColor}
+                  transition-all duration-300`}
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+            <div className="flex gap-4 w-full sm:w-auto justify-center sm:justify-start">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-future text-neon.purple hover:text-neon.cyan bg-white/5 hover:bg-white/10 transition-all duration-300"
+              >
+                <Github className="w-4 h-4" />
+                <span className="whitespace-nowrap">View Code</span>
+              </a>
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-future text-neon.cyan hover:text-neon.purple bg-white/5 hover:bg-white/10 transition-all duration-300"
+              >
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="whitespace-nowrap">Live Demo</span>
+              </a>
+            </div>
+
+            <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
+              <motion.button
+                onClick={() => handleProjectNavigation(activeFeatureIndex - 1)}
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <ChevronLeft className="w-5 h-5 text-neon.cyan" />
+              </motion.button>
+              <motion.button
+                onClick={() => handleProjectNavigation(activeFeatureIndex + 1)}
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <ChevronRight className="w-5 h-5 text-neon.cyan" />
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }, [activeFeatureIndex, handleProjectNavigation])
 
   return (
     <section id="projects" className="py-20 relative overflow-hidden">
@@ -143,240 +325,16 @@ export default function Projects() {
           <motion.div className="relative lg:row-span-2">
             <div className="h-full relative overflow-hidden rounded-xl border border-white/10 bg-background/50 backdrop-blur-sm 
               transition-all duration-300 hover:border-neon.cyan/50 hover:shadow-lg">
-              
               <AnimatePresence mode="wait">
-                {leftProjects[activeFeatureIndex] && (
-                  <motion.div
-                    key={activeFeatureIndex}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                    className="relative flex flex-col h-full"
-                  >
-                    {/* Image Container */}
-                    <div 
-                      className="relative aspect-video w-full overflow-hidden rounded-t-xl project-image-container cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Add any image click handling here if needed
-                      }}
-                    >
-                      <img
-                        src={leftProjects[activeFeatureIndex].image}
-                        alt={leftProjects[activeFeatureIndex].title}
-                        className="absolute inset-0 w-full h-full object-cover object-center transform-gpu transition-all duration-500 hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60" />
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-8" onClick={e => e.stopPropagation()}>
-                      {/* Title with Animated Underline */}
-                      <div className="relative inline-block mb-4">
-                        <h3 className={`font-future text-2xl bg-clip-text text-transparent bg-gradient-to-r ${leftProjects[activeFeatureIndex].color}`}>
-                          {leftProjects[activeFeatureIndex].title}
-                        </h3>
-                        <div className={`absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r ${leftProjects[activeFeatureIndex].color}`} />
-                      </div>
-
-                      {/* Description */}
-                      <p className="font-cyber text-base text-neon.cyan/80 mb-6">
-                        {leftProjects[activeFeatureIndex].description}
-                      </p>
-
-                      {/* Technologies */}
-                      <div className="flex flex-wrap gap-3 mb-8">
-                        {leftProjects[activeFeatureIndex].technologies.map((tech, i) => (
-                          <motion.span
-                            key={i}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: i * 0.1 }}
-                            className={`px-4 py-1.5 rounded-full text-sm font-future
-                              bg-gradient-to-r ${leftProjects[activeFeatureIndex].color} bg-opacity-10
-                              border border-white/10 hover:border-neon.cyan/30
-                              text-white shadow-lg ${leftProjects[activeFeatureIndex].shadowColor}
-                              transition-all duration-300`}
-                          >
-                            {tech}
-                          </motion.span>
-                        ))}
-                      </div>
-
-                      {/* Links */}
-                      <div className="flex items-center justify-between relative z-10">
-                        <div className="flex gap-4 mt-2">
-                          <a
-                            href={leftProjects[activeFeatureIndex].github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={e => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              window.open(leftProjects[activeFeatureIndex].github, '_blank');
-                            }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-future text-neon.purple hover:text-neon.cyan bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer"
-                          >
-                            <Github className="w-4 h-4" />
-                            <span className="whitespace-nowrap">View Code</span>
-                          </a>
-                          <a
-                            href={leftProjects[activeFeatureIndex].live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={e => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              window.open(leftProjects[activeFeatureIndex].live, '_blank');
-                            }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-future text-neon.cyan hover:text-neon.purple bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer"
-                          >
-                            <ArrowUpRight className="w-4 h-4" />
-                            <span className="whitespace-nowrap">Live Demo</span>
-                          </a>
-                        </div>
-
-                        {/* Navigation Buttons */}
-                        <div className="flex gap-2">
-                          <motion.button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleProjectNavigation(activeFeatureIndex - 1);
-                            }}
-                            className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <ChevronLeft className="w-5 h-5 text-neon.cyan" />
-                          </motion.button>
-                          <motion.button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleProjectNavigation(activeFeatureIndex + 1);
-                            }}
-                            className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon.cyan/30 transition-colors"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <ChevronRight className="w-5 h-5 text-neon.cyan" />
-                          </motion.button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                {FeaturedProject}
               </AnimatePresence>
-
-              {/* Navigation Buttons */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {leftProjects.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleProjectNavigation(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === activeFeatureIndex 
-                        ? 'bg-neon.cyan w-6' 
-                        : 'bg-white/20 hover:bg-white/40'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
           </motion.div>
 
           {/* Right Side Projects */}
           <div className="grid grid-cols-1 gap-6">
             {rightProjects.map((project, index) => (
-              <motion.div
-                key={project.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group relative"
-              >
-                {/* Project Card */}
-                <div className="relative overflow-hidden rounded-xl border border-white/10 bg-background/50 backdrop-blur-sm 
-                  transition-all duration-300 hover:border-neon.cyan/50 hover:shadow-lg hover:-translate-y-1">
-                  {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 
-                    bg-gradient-to-br ${project.color}`} />
-                  
-                  {/* Content */}
-                  <div className="flex flex-col sm:flex-row items-start gap-4 p-4">
-                    {/* Image Thumbnail */}
-                    <div className="relative aspect-video w-full sm:w-72 flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="absolute inset-0 w-full h-full object-cover object-center transform-gpu transition-all duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/50" />
-                    </div>
-
-                    {/* Project Info */}
-                    <div className="flex-1 min-w-0 w-full">
-                      <h3 className={`font-future text-base bg-clip-text text-transparent bg-gradient-to-r ${project.color} mb-2`}>
-                        {project.title}
-                      </h3>
-
-                      <p className="font-cyber text-xs text-neon.cyan/80 mb-3 line-clamp-2">
-                        {project.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {project.technologies.map((tech, i) => (
-                          <span
-                            key={i}
-                            className={`px-2 py-0.5 rounded-full text-xs font-future
-                              bg-gradient-to-r ${project.color} bg-opacity-10
-                              border border-white/10 hover:border-neon.cyan/30
-                              text-white/80 shadow-lg ${project.shadowColor}
-                              transition-all duration-300`}
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Links */}
-                      <div className="flex gap-4 mt-2">
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(project.github, '_blank');
-                          }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-future text-neon.purple hover:text-neon.cyan bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer z-10"
-                        >
-                          <Github className="w-4 h-4" />
-                          <span className="whitespace-nowrap">View Code</span>
-                        </a>
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(project.live, '_blank');
-                          }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-future text-neon.cyan hover:text-neon.purple bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer z-10"
-                        >
-                          <ArrowUpRight className="w-4 h-4" />
-                          <span className="whitespace-nowrap">Live Demo</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              <ProjectCard key={project.title} project={project} index={index} />
             ))}
           </div>
         </div>
